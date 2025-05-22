@@ -1,0 +1,30 @@
+{
+  "name": "turborepo-template",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "build": "turbo run build",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "clean": "turbo run clean",
+    "docker:build": "cross-env COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml build",
+    "docker:start": "docker-compose -f docker-compose.yml up -d",
+    "docker:stop": "docker-compose -f docker-compose.yml down",
+    "docker:prune": "docker system prune -a -f --volumes"
+  },
+  "devDependencies": {
+    "@angular/cli": "^19.2.12",
+    "cross-env": "^7.0.3",
+    "prettier": "^3.5.3",
+    "turbo": "^2.5.3"
+  },
+  "packageManager": "pnpm@9.15.1",
+  "dependencies": {
+    "npm-check-updates": "^18.0.1"
+  }
+}
