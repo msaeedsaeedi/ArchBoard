@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DashboardComponent } from './dashboard.component';
 
 describe('DashboardComponent', () => {
@@ -16,27 +15,23 @@ describe('DashboardComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render toggle dark mode button', () => {
-    const fixture = TestBed.createComponent(DashboardComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('p-button')?.getAttribute('label')).toEqual('Toggle Dark Mode');
+  it('should render the toggle dark mode button', () => {
+    const buttonEl = fixture.nativeElement.querySelector('button');
+    expect(buttonEl?.textContent?.trim()).toBe('Toggle Dark Mode');
   });
 
-  it('should toggle dark mode class when toggleDarkMode is called', () => {
-    const fixture = TestBed.createComponent(DashboardComponent);
-    const app = fixture.componentInstance;
-    const htmlElement = document.createElement('html');
-    document.querySelector = jasmine.createSpy('querySelector').and.returnValue(htmlElement);
+  it('should toggle dark mode class on <html> when toggleDarkMode is called', () => {
+    const htmlElement = document.documentElement;
 
-    app.toggleDarkMode();
+    htmlElement.classList.remove('p-dark');
+    component.toggleDarkMode();
     expect(htmlElement.classList.contains('p-dark')).toBeTrue();
 
-    app.toggleDarkMode();
+    component.toggleDarkMode();
     expect(htmlElement.classList.contains('p-dark')).toBeFalse();
   });
 });
