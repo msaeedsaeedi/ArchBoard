@@ -1,1 +1,28 @@
-<p>login works!</p>
+<section class="h-dvh flex flex-col justify-center items-center">
+  <h1 class="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight mb-8">
+    Login
+  </h1>
+  <form
+    class="flex flex-col gap-3 min-w-[25dvw] max-w-sm"
+    [formGroup]="loginForm"
+    (ngSubmit)="onLogin()"
+  >
+    <p-floatlabel variant="on">
+      <label for="username">Username</label>
+      <input type="text" class="w-full" id="username" formControlName="username" pInputText />
+    </p-floatlabel>
+
+    <p-floatlabel variant="on">
+      <label for="password">Password</label>
+      <input type="password" class="w-full" id="password" formControlName="password" pInputText />
+    </p-floatlabel>
+    <button
+      label="Login"
+      [loading]="loading()"
+      type="submit"
+      class="w-full disabled:cursor-not-allowed"
+      [disabled]="!this.loginForm.valid"
+      pButton
+    ></button>
+  </form>
+</section>
