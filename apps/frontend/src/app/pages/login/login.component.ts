@@ -8,6 +8,7 @@ import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -30,18 +31,17 @@ export class LoginComponent {
   async onLogin() {
     this.loading.set(true);
 
-    try {
-      await this.authService.login(
-        this.loginForm.controls.username.value,
-        this.loginForm.controls.password.value,
-      );
-
-      this.toast.success('Login', 'Successfully Logged In');
-      this.router.navigate(['dashboard']);
-    } catch (error) {
-      this.toast.error('Login', error as string);
-    } finally {
-      this.loading.set(false);
-    }
+    this.authService
+      .login(this.loginForm.controls.username.value, this.loginForm.controls.password.value)
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: () => {
+          this.toast.success('Login', 'Successfully Logged In');
+          this.router.navigate(['dashboard']);
+        },
+        error: (err: Error) => {
+          this.toast.error('Login', err.message);
+        },
+      });
   }
 }

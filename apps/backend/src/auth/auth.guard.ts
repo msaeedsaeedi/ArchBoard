@@ -20,8 +20,8 @@ export class AuthGuard implements CanActivate {
 
     if (isPublic) return true;
 
-    const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
+    const request: Request = context.switchToHttp().getRequest();
+    const token = request.cookies?.access_token;
     if (!token) {
       throw new UnauthorizedException();
     }
@@ -29,10 +29,5 @@ export class AuthGuard implements CanActivate {
     // TODO: Update token validation logic
     if (token !== '123') return false;
     return true;
-  }
-
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
   }
 }
