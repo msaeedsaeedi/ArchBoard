@@ -3,6 +3,7 @@ import {
   Request,
   Post,
   UseGuards,
+  Response,
   HttpStatus,
   HttpCode,
   Body,
@@ -11,7 +12,7 @@ import {
 import { LocalAuthGuard } from './guards/local.guard';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
-import { EmailLoginDto } from './dto/login.dto';
+import { Response as EResponse } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -21,8 +22,11 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() emailLoginDto: EmailLoginDto, @Request() req) {
-    return this.authService.login(req.user);
+  async login(
+    @Request() req,
+    @Response({ passthrough: true }) response: EResponse,
+  ) {
+    return this.authService.login(req.user, response);
   }
 
   @UseGuards(LocalAuthGuard)

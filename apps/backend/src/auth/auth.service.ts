@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from './entities/user.entity';
+import { User } from '../users/entities/user.entity';
+import { Response } from 'express';
+import { ApiConfigService } from 'src/config/apiConfig.service';
+import { Environment } from 'src/config/types';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
+    private apiConfigService: ApiConfigService,
     private jwtService: JwtService,
   ) {}
 
@@ -22,10 +26,14 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
+  async login(user: any, response: Response) {
     const payload = { username: user.username, sub: user.userId };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    response.cookie('access_token', this.jwtService.sign(payload), {
+      httpOnly: true,
+      secure:
+        this.apiConfigService.ENVIRONMENT === Environment.Production
+          ? true
+          : false,
+    });
   }
 }
