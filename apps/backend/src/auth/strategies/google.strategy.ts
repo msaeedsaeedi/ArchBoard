@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth2';
 import { ApiConfigService } from 'src/config/apiConfig.service';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'generated/prisma';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
@@ -23,12 +23,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   ): Promise<any> {
     const { id, displayName, emails, photos } = profile;
 
-    const user: User = {
-      provider: 'google',
-      userId: id,
-      email: emails[0].value,
+    const user: Partial<User> = {
+      Provider: 'google',
+      UserId: id,
+      Email: emails[0].value,
       FullName: displayName,
-      picture_url: photos[0].value,
+      PictureUrl: photos[0].value,
     };
 
     done(null, user);

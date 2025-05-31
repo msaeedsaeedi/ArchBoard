@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { Response as EResponse } from 'express';
 import { GoogleOauthGuard } from './guards/google.guard';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'generated/prisma';
 
 @Controller('auth')
 export class AuthController {
@@ -29,7 +29,7 @@ export class AuthController {
     @Response({ passthrough: true }) response: EResponse,
   ) {
     const user = request.user as User;
-    await this.authService.login(user.email, user.userId, response);
+    await this.authService.login(user.Email, user.UserId.toString(), response);
   }
 
   @Get('google')
