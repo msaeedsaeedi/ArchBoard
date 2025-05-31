@@ -1,33 +1,34 @@
 import {
   Controller,
+  Request,
   Post,
-  Body,
-  HttpCode,
+  UseGuards,
   HttpStatus,
-  Response,
+  HttpCode,
+  Body,
   Get,
 } from '@nestjs/common';
+import { LocalAuthGuard } from './guards/local.guard';
 import { AuthService } from './auth.service';
+import { Public } from './decorators/public.decorator';
 import { EmailLoginDto } from './dto/login.dto';
-import { Public } from './decorator/public.decorator';
-import { Response as EResponse } from 'express';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
   @Public()
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  EmailLogin(
-    @Body() emailLoginDto: EmailLoginDto,
-    @Response({ passthrough: true }) res: EResponse,
-  ): Promise<any> {
-    return this.authService.signIn(
-      emailLoginDto.username,
-      emailLoginDto.password,
-      res,
-    );
+  async login(@Body() emailLoginDto: EmailLoginDto, @Request() req) {
+    return this.authService.login(req.user);
+  }
+
+  @UseGuards(LocalAuthGuard)
+  @Post('logout')
+  async logout(@Request() req) {
+    return req.logout();
   }
 
   @Get()

@@ -1,55 +1,31 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { User } from './entities/user.entity';
-import { Response } from 'express';
+import { Injectable } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { ApiConfigService } from 'src/config/apiConfig.service';
-import { Environment } from 'src/config/types';
-
-const users: User[] = [
-  {
-    id: 1,
-    username: 'admin',
-    password: '123',
-  },
-  {
-    id: 2,
-    username: 'maria',
-    password: 'guess',
-  },
-];
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private usersService: UsersService,
     private jwtService: JwtService,
-    private apiConfigService: ApiConfigService,
   ) {}
 
-  async signIn(
+  async validateUser(
     username: string,
-    password: string,
-    res: Response,
-  ): Promise<any> {
-    // TODO: Update validation logic
-    const authorized = users.find(
-      (user) => user.username === username && user.password === password,
-    );
-
-    if (!authorized) {
-      throw new UnauthorizedException();
+    pass: string,
+  ): Promise<Partial<User> | null> {
+    const user = await this.usersService.findOne(username);
+    if (user && user.password === pass) {
+      const { password, ...result } = user;
+      return result;
     }
+    return null;
+  }
 
-    const payload = { sub: username };
-    const access_token = await this.jwtService.signAsync(payload, {
-      expiresIn: this.apiConfigService.JWT_EXPIRESIN,
-      secret: this.apiConfigService.JWT_SECRET,
-    });
-    res.cookie('access_token', access_token, {
-      httpOnly: true,
-      secure:
-        this.apiConfigService.ENVIRONMENT === Environment.Production
-          ? true
-          : false,
-    });
+  async login(user: any) {
+    const payload = { username: user.username, sub: user.userId };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
