@@ -1,13 +1,17 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, of, throwError, timer } from 'rxjs';
+import { catchError, map, Observable, of, tap, throwError, timer } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient);
+  router = inject(Router);
+  toast = inject(ToastService);
 
   constructor() {}
 
@@ -22,12 +26,12 @@ export class AuthService {
       );
   }
 
-  public login(username: string, password: string): Observable<void> {
+  public login(email: string, password: string): Observable<void> {
     return this.http
       .post<void>(
         `${environment.apiUrl}/auth/login`,
         {
-          username,
+          email,
           password,
         },
         {
@@ -37,7 +41,7 @@ export class AuthService {
       .pipe(
         catchError((error: HttpErrorResponse) => {
           if (error.status == 401) {
-            return throwError(() => new Error('Invalid username or password.'));
+            return throwError(() => new Error('Invalid email or password.'));
           } else {
             console.error(error);
             return throwError(() => new Error('Login failed. Please try again later.'));
@@ -46,7 +50,18 @@ export class AuthService {
       );
   }
 
-  public logout(): Promise<void> {
-    return new Promise((resolve) => timer(2000).subscribe((_) => resolve()));
+  public logout(): void {
+    this.http
+      .post<void>(`${environment.apiUrl}/auth/logout`, null, {
+        withCredentials: true,
+      })
+      .subscribe({
+        next: () => {
+          this.router.navigate(['login']);
+        },
+        error: () => {
+          this.toast.error('Error', 'Something went wrong');
+        },
+      });
   }
 }

@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { finalize } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -22,9 +23,10 @@ export class LoginComponent {
   toast = inject(ToastService);
 
   loading = signal<boolean>(false);
+  signInWithGoogleLink: string = `${environment.apiUrl}/auth/google`;
 
   loginForm = new FormGroup({
-    username: new FormControl('', { nonNullable: true, validators: Validators.required }),
+    email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
     password: new FormControl('', { nonNullable: true, validators: Validators.required }),
   });
 
@@ -32,7 +34,7 @@ export class LoginComponent {
     this.loading.set(true);
 
     this.authService
-      .login(this.loginForm.controls.username.value, this.loginForm.controls.password.value)
+      .login(this.loginForm.controls.email.value, this.loginForm.controls.password.value)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: () => {

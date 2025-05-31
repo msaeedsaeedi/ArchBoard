@@ -14,11 +14,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(
-    username: string,
-    pass: string,
-  ): Promise<Partial<User> | null> {
-    const user = await this.usersService.findOne(username);
+  async validateUser(email: string, pass: string): Promise<User | null> {
+    const user = await this.usersService.findOne(email);
     if (user && user.password === pass) {
       const { password, ...result } = user;
       return result;
@@ -26,8 +23,9 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any, response: Response) {
-    const payload = { username: user.username, sub: user.userId };
+  async login(email: string, userId: string, response: Response) {
+    const payload = { email: email, UserId: userId };
+    console.log("Signing JWT For: ",payload);
     response.cookie('access_token', this.jwtService.sign(payload), {
       httpOnly: true,
       secure:
@@ -35,5 +33,10 @@ export class AuthService {
           ? true
           : false,
     });
+  }
+
+  async googleLogin(user: User, response: Response) {
+    await this.login(user.email, user.userId, response);
+    response.redirect(this.apiConfigService.AUTH_CALLBACK);
   }
 }

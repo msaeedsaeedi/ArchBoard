@@ -1,10 +1,14 @@
 import { Dependencies, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Environment } from './types';
+import { Environment, GOOGLE_ENV } from './types';
 
 @Injectable()
 export class ApiConfigService {
   constructor(private configService: ConfigService) {}
+
+  get AUTH_CALLBACK(): string {
+    return this.configService.get<string>('AUTH_CALLBACK')!;
+  }
 
   get PORT(): number {
     return this.configService.get<number>('PORT') || 3001;
@@ -31,5 +35,19 @@ export class ApiConfigService {
       ?.split(',')
       .map((origin) => origin.trim())
       .filter(Boolean);
+  }
+
+  get GOOGLE(): GOOGLE_ENV {
+    const clientID = this.configService.get<string>('GOOGLE.CLIENT_ID')!;
+    const clientSecret = this.configService.get<string>(
+      'GOOGLE.CLIENT_SECRET',
+    )!;
+    const callbackURL = this.configService.get<string>('GOOGLE.CALLBACK_URL')!;
+
+    return {
+      CLIENT_ID: clientID,
+      CLIENT_SECRET: clientSecret,
+      CALLBACK_URL: callbackURL,
+    };
   }
 }

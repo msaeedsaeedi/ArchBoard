@@ -8,21 +8,24 @@
     (ngSubmit)="onLogin()"
   >
     <p-floatlabel variant="on">
-      <label for="username">Username</label>
-      <input type="text" class="w-full" id="username" formControlName="username" pInputText />
+      <label for="email">Email</label>
+      <input type="email" class="w-full" id="email" formControlName="email" pInputText />
     </p-floatlabel>
 
     <p-floatlabel variant="on">
       <label for="password">Password</label>
       <input type="password" class="w-full" id="password" formControlName="password" pInputText />
     </p-floatlabel>
-    <button
+    <p-button
       label="Login"
       [loading]="loading()"
       type="submit"
-      class="w-full disabled:cursor-not-allowed"
+      class="disabled:cursor-not-allowed"
       [disabled]="!this.loginForm.valid"
-      pButton
-    ></button>
+      fluid="true"
+    />
+    <a [href]="signInWithGoogleLink">
+      <p-button label="Signin with Google" fluid="true" variant="outlined" />
+    </a>
   </form>
 </section>

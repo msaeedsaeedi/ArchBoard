@@ -1,10 +1,21 @@
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsNumber, IsOptional, IsString, Max, Min, validateSync } from 'class-validator';
+import {
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+  validateSync,
+} from 'class-validator';
 import { Environment } from './types';
 
 class EnvironmentVariables {
   @IsEnum(Environment)
   NODE_ENV: Environment;
+
+  @IsString()
+  AUTH_CALLBACK: string;
 
   @IsNumber()
   @Min(0)
@@ -20,6 +31,15 @@ class EnvironmentVariables {
   @IsString()
   @IsOptional()
   ORIGIN: string;
+
+  @IsString()
+  'GOOGLE.CLIENT_ID': string;
+
+  @IsString()
+  'GOOGLE.CLIENT_SECRET': string;
+
+  @IsString()
+  'GOOGLE.CALLBACK_URL': string;
 }
 
 export function validate(config: Record<string, unknown>) {

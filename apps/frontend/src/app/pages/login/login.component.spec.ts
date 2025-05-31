@@ -21,9 +21,9 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have a label and input for username', () => {
-    const label = compiled.querySelector('label[for="username"]');
-    const input = compiled.querySelector('#username');
+  it('should have a label and input for email', () => {
+    const label = compiled.querySelector('label[for="email"]');
+    const input = compiled.querySelector('#email');
     expect(label).toBeTruthy();
     expect(input).toBeTruthy();
   });
@@ -41,25 +41,25 @@ describe('LoginComponent', () => {
     expect(button?.textContent?.trim()).toBe('Login');
   });
 
-  it('should have an invalid form when username and password are empty', () => {
-    component.loginForm.setValue({ username: '', password: '' });
+  it('should have an invalid form when email and password are empty', () => {
+    component.loginForm.setValue({ email: '', password: '' });
     expect(component.loginForm.valid).toBeFalse();
   });
 
   it('should have a valid form when both fields are filled', () => {
-    component.loginForm.setValue({ username: 'admin', password: '123' });
+    component.loginForm.setValue({ email: 'admin', password: '123' });
     expect(component.loginForm.valid).toBeTrue();
   });
 
   it('should disable the login button when the form is invalid', () => {
-    component.loginForm.setValue({ username: '', password: '' });
+    component.loginForm.setValue({ email: '', password: '' });
     fixture.detectChanges();
     const button = compiled.querySelector('button[type="submit"]') as HTMLButtonElement;
     expect(button.disabled).toBeTrue();
   });
 
   it('should enable the login button when the form is valid', () => {
-    component.loginForm.setValue({ username: 'admin', password: '123' });
+    component.loginForm.setValue({ email: 'admin', password: '123' });
     fixture.detectChanges();
     const button = compiled.querySelector('button[type="submit"]') as HTMLButtonElement;
     expect(button.disabled).toBeFalse();
@@ -67,7 +67,7 @@ describe('LoginComponent', () => {
 
   it('should call onLogin when form is submitted and valid', () => {
     spyOn(component, 'onLogin');
-    component.loginForm.setValue({ username: 'admin', password: '123' });
+    component.loginForm.setValue({ email: 'admin', password: '123' });
     fixture.detectChanges();
 
     const form = compiled.querySelector('form')!;
