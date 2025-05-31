@@ -26,19 +26,41 @@ export class AuthService {
     return null;
   }
 
+  async validateOAuthUser(
+    email: string,
+    OAuthId: string,
+  ): Promise<Partial<User> | null> {
+    const user = await this.usersService.findOne(email);
+    if (user && user.OAuthId === OAuthId) {
+      const { Password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+
   async login(email: string, userId: string, response: Response) {
     const payload = { email: email, UserId: userId };
     response.cookie('access_token', this.jwtService.sign(payload), {
       httpOnly: true,
-      secure:
-        this.apiConfigService.ENVIRONMENT === Environment.Production
-          ? true
-          : false,
+      secure: this.apiConfigService.ENVIRONMENT === Environment.Production,
     });
   }
 
-  async googleLogin(user: User, response: Response) {
-    await this.login(user.Email, user.UserId.toString(), response);
-    response.redirect(this.apiConfigService.AUTH_CALLBACK);
+  async signup(
+    provider: string,
+    email: string,
+    fullName: string,
+    photoUrl?: string,
+    oAuthId?: string,
+    password?: string,
+  ): Promise<User> {
+    return await this.usersService.create(
+      provider,
+      email,
+      fullName,
+      photoUrl,
+      oAuthId,
+      password,
+    );
   }
 }

@@ -21,6 +21,6 @@ model User {
   Provider      String
   OAuthId       String?
   FullName      String  
-  Password      String
+  Password      String?
   PictureUrl    String?
 }

@@ -13,4 +13,24 @@ export class UsersService {
       },
     });
   }
+
+  async create(
+    provider: string,
+    email: string,
+    fullName: string,
+    photoUrl?: string,
+    oAuthId?: string,
+    password?: string,
+  ): Promise<User> {
+    return this.db.user.create({
+      data: {
+        Provider: provider,
+        Email: email,
+        FullName: fullName,
+        PictureUrl: photoUrl,
+        OAuthId: oAuthId,
+        Password: password,
+      },
+    });
+  }
 }
