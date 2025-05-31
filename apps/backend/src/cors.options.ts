@@ -1,11 +1,10 @@
-import { type CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { ApiConfigService } from './config/apiConfig.service';
 
-const CorsOptions: CorsOptions = {
-  origin: ['http://localhost:4200'],
+export const createCorsOptions = (configService: ApiConfigService): CorsOptions => ({
+  origin: configService.ORIGINS,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: 'Content-Type, Authorization',
   credentials: true,
   maxAge: 86400,
-};
-
-export { CorsOptions };
+});

@@ -32,7 +32,8 @@ export class AuthController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  Verify(@Response({ passthrough: true }) res: EResponse) {
-    return this.authService.verify(res);
+  Verify() {
+    // Placeholder route for verification
+    // Cookie Verification is Handled by Auth Guard
   }
 }
