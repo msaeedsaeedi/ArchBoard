@@ -1,0 +1,31 @@
+<section class="h-dvh flex flex-col justify-center items-center">
+  <h1 class="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight mb-8">
+    Login
+  </h1>
+  <form
+    class="flex flex-col gap-3 min-w-[25dvw] max-w-sm"
+    [formGroup]="loginForm"
+    (ngSubmit)="onLogin()"
+  >
+    <p-floatlabel variant="on">
+      <label for="email">Email</label>
+      <input type="email" class="w-full" id="email" formControlName="email" pInputText />
+    </p-floatlabel>
+
+    <p-floatlabel variant="on">
+      <label for="password">Password</label>
+      <input type="password" class="w-full" id="password" formControlName="password" pInputText />
+    </p-floatlabel>
+    <p-button
+      label="Login"
+      [loading]="loading()"
+      type="submit"
+      class="disabled:cursor-not-allowed"
+      [disabled]="!this.loginForm.valid"
+      fluid="true"
+    />
+    <a [href]="signInWithGoogleLink">
+      <p-button label="Signin with Google" fluid="true" variant="outlined" />
+    </a>
+  </form>
+</section>
