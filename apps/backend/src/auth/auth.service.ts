@@ -6,6 +6,7 @@ import { Response } from 'express';
 import { ApiConfigService } from 'src/config/apiConfig.service';
 import { Environment } from 'src/config/types';
 import * as bcrypt from 'bcrypt';
+import { AccessTokenPayload } from './types/accessTokenPayload';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,12 @@ export class AuthService {
     private apiConfigService: ApiConfigService,
     private jwtService: JwtService,
   ) {}
+
+  async userExist(email: string): Promise<boolean> {
+    const user = await this.usersService.findOne(email);
+    if (!user) return false;
+    return true;
+  }
 
   async validateUser(
     email: string,
@@ -42,7 +49,10 @@ export class AuthService {
   }
 
   async login(email: string, userId: string, response: Response) {
-    const payload = { email: email, UserId: userId };
+    const payload: AccessTokenPayload = {
+      Email: email,
+      UserId: Number.parseInt(userId),
+    };
     response.cookie('access_token', this.jwtService.sign(payload), {
       httpOnly: true,
       secure: this.apiConfigService.ENVIRONMENT === Environment.Production,
