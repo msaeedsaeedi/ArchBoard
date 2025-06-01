@@ -1,1 +1,5 @@
-export { PasswordValidationRules } from './validation/password-rules.js';
+export {
+  PasswordValidationRules,
+  PasswordCriteriaStatus,
+  checkPasswordCriteria,
+} from './validation/password-rules.js';
