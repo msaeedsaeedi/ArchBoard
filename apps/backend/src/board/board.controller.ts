@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   HttpCode,
   HttpStatus,
@@ -33,7 +34,7 @@ export class BoardController {
       return plainToInstance(CreateBoardResponseDto, { slug });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError)
-        if (error.code === 'P2002') response.status(HttpStatus.CONFLICT);
+        if (error.code === 'P2002') throw new ConflictException();
       throw error;
     }
   }
