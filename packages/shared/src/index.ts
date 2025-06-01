@@ -1,1 +1,1 @@
-export * from './validation/password-rules';
+export { PasswordValidationRules } from './validation/password-rules.js';
