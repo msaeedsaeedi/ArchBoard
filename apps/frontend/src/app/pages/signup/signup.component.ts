@@ -10,10 +10,19 @@ import { environment } from '../../../environments/environment';
 import { matchValidator } from '../../utils/match.validator';
 import { finalize } from 'rxjs';
 import { passwordValidator } from '../../utils/password.validator';
+import { PasswordModule } from 'primeng/password';
+import { DividerModule } from 'primeng/divider';
 
 @Component({
   selector: 'app-signup',
-  imports: [ReactiveFormsModule, InputTextModule, FloatLabelModule, ButtonModule],
+  imports: [
+    ReactiveFormsModule,
+    InputTextModule,
+    FloatLabelModule,
+    ButtonModule,
+    PasswordModule,
+    DividerModule,
+  ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
 })
@@ -36,7 +45,11 @@ export class SignupComponent {
     }),
     password: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, matchValidator('confirmPassword', true), passwordValidator()],
+      validators: [
+        Validators.required,
+        matchValidator('confirmPassword', true),
+        passwordValidator(),
+      ],
     }),
     confirmPassword: new FormControl('', {
       validators: [Validators.required, matchValidator('password')],

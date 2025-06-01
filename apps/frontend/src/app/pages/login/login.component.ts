@@ -4,6 +4,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { ButtonModule } from 'primeng/button';
 import { Validators } from '@angular/forms';
+import { PasswordModule } from 'primeng/password';
 
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -13,7 +14,7 @@ import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, InputTextModule, FloatLabelModule, ButtonModule],
+  imports: [ReactiveFormsModule, InputTextModule, FloatLabelModule, ButtonModule, PasswordModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -26,7 +27,10 @@ export class LoginComponent {
   signInWithGoogleLink: string = `${environment.apiUrl}/auth/google`;
 
   loginForm = new FormGroup({
-    email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+    email: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.email],
+    }),
     password: new FormControl('', { nonNullable: true, validators: Validators.required }),
   });
 

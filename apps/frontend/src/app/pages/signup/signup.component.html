@@ -17,20 +17,40 @@
       <input type="email" class="w-full" id="email" formControlName="email" pInputText />
     </p-floatlabel>
 
+    <!-- TODO: Implement Password Checklist (Score and some other properties are available in control errors) -->
     <p-floatlabel variant="on">
+      <p-password
+        inputId="password"
+        formControlName="password"
+        fluid="true"
+        feedback="true"
+        toggleMask="true"
+      >
+        <ng-template #header>
+          <div class="font-semibold text-xm mb-4">Pick a password</div>
+        </ng-template>
+        <ng-template #content>
+          <ul class="pl-2 ml-2 my-0 leading-normal">
+            <li>At least one lowercase</li>
+            <li>At least one uppercase</li>
+            <li>At least one numeric</li>
+            <li>Minimum 8 characters</li>
+          </ul>
+        </ng-template>
+      </p-password>
       <label for="password">Password</label>
-      <input type="password" class="w-full" id="password" formControlName="password" pInputText />
     </p-floatlabel>
 
     <p-floatlabel variant="on">
-      <label for="confirmPassword">Confirm Password</label>
-      <input
-        type="password"
-        class="w-full"
-        id="confirmPassword"
+      <p-password
+        inputId="confirmPassword"
         formControlName="confirmPassword"
-        pInputText
+        fluid="true"
+        fluid="true"
+        toggleMask="true"
+        feedback="false"
       />
+      <label for="confirmPassword">Confirm Password</label>
     </p-floatlabel>
     <p-button
       label="Signup"
