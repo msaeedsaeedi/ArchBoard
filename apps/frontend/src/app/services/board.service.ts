@@ -12,7 +12,7 @@ export class BoardService {
   create(title: string, description: string | null): Observable<string> {
     return this.http
       .post<{ slug: string }>(
-        `${environment.apiUrl}/boards`,
+        `${environment.apiUrl}/board`,
         {
           title,
           description,
