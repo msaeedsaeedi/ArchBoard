@@ -5,6 +5,7 @@ import { User } from 'generated/prisma';
 import { Response } from 'express';
 import { ApiConfigService } from 'src/config/apiConfig.service';
 import { Environment } from 'src/config/types';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -19,11 +20,13 @@ export class AuthService {
     pass: string,
   ): Promise<Partial<User> | null> {
     const user = await this.usersService.findOne(email);
-    if (user && user.Password === pass) {
-      const { Password, ...result } = user;
-      return result;
-    }
-    return null;
+    if (user == null || user.Password === null) return null;
+
+    const isMatch = await bcrypt.compare(pass, user.Password);
+    if (!isMatch) return null;
+
+    const { Password, ...result } = user;
+    return result;
   }
 
   async validateOAuthUser(
