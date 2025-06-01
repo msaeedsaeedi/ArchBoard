@@ -33,6 +33,9 @@ class EnvironmentVariables {
   ORIGIN: string;
 
   @IsString()
+  DATABASE_URL: string;
+
+  @IsString()
   'GOOGLE.CLIENT_ID': string;
 
   @IsString()
