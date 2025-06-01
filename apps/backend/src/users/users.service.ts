@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from 'generated/prisma';
+import { hashPassword } from 'src/auth/utils/hash-password';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -22,6 +23,9 @@ export class UsersService {
     oAuthId?: string,
     password?: string,
   ): Promise<User> {
+    if (password)
+      password = await hashPassword(password);
+    
     return this.db.user.create({
       data: {
         Provider: provider,

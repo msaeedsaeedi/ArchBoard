@@ -8,15 +8,17 @@ import {
   Get,
   Req,
   Res,
+  Body,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local.guard';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
-import { Response as EResponse } from 'express';
+import { Response as EResponse, response } from 'express';
 import { GoogleOauthGuard } from './guards/google.guard';
-import { User } from 'generated/prisma';
+import { Prisma, User } from 'generated/prisma';
 import { ApiConfigService } from 'src/config/apiConfig.service';
 import { Environment } from 'src/config/types';
+import { SignupDto } from './dto/signup.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -35,6 +37,35 @@ export class AuthController {
   ) {
     const user = request.user as User;
     await this.authService.login(user.Email, user.UserId.toString(), response);
+  }
+
+  @Public()
+  @Post('signup')
+  @HttpCode(HttpStatus.CREATED)
+  async signup(
+    @Body() signupDto: SignupDto,
+    @Response({ passthrough: true }) response: EResponse,
+  ) {
+    try {
+      const user = await this.authService.signup(
+        'local',
+        signupDto.email,
+        signupDto.fullName,
+        signupDto.pictureUrl,
+        undefined,
+        signupDto.password,
+      );
+
+      await this.authService.login(
+        user.Email,
+        user.UserId.toString(),
+        response,
+      );
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') response.status(HttpStatus.CONFLICT);
+      }
+    }
   }
 
   @Get('google')
