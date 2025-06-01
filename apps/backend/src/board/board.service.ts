@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBoardDto } from './dto/createBoard.dto';
 import { PrismaService } from 'src/prisma.service';
+import slugify from 'slugify';
 
 @Injectable()
 export class BoardService {
   constructor(private db: PrismaService) {}
 
   async create(payload: CreateBoardDto, userId: number): Promise<string> {
-    const slug = payload.title; // use slugify
+    const slug = slugify(payload.title);
     await this.db.board.create({
       data: {
         Name: payload.title,
