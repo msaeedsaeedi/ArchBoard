@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of, tap, throwError, timer } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -46,6 +46,30 @@ export class AuthService {
             console.error(error);
             return throwError(() => new Error('Login failed. Please try again later.'));
           }
+        }),
+      );
+  }
+
+  public signup(fullName: string, email: string, password: string): Observable<void> {
+    return this.http
+      .post<void>(
+        `${environment.apiUrl}/auth/signup`,
+        {
+          fullName,
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        },
+      )
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status == HttpStatusCode.Conflict)
+            return throwError(() => new Error('Account Already Exists!'));
+          if (error.status == HttpStatusCode.BadRequest)
+            return throwError(() => new Error('Internal Error Occured'));
+          return throwError(() => new Error('Signup failed. Please try again later.'));
         }),
       );
   }
