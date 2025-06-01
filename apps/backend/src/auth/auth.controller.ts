@@ -9,6 +9,8 @@ import {
   Req,
   Res,
   Body,
+  ConflictException,
+  UseFilters,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local.guard';
 import { AuthService } from './auth.service';
@@ -19,6 +21,7 @@ import { Prisma, User } from 'generated/prisma';
 import { ApiConfigService } from 'src/config/apiConfig.service';
 import { Environment } from 'src/config/types';
 import { SignupDto } from './dto/signup.dto';
+import { UnauthorizedExceptionFilter } from './filters/unauthorized-exceptioin.filter';
 
 @Controller('auth')
 export class AuthController {
@@ -63,7 +66,7 @@ export class AuthController {
       );
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2002') response.status(HttpStatus.CONFLICT);
+        if (error.code === 'P2002') throw new ConflictException();
       }
     }
   }
@@ -95,6 +98,7 @@ export class AuthController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
+  @UseFilters(UnauthorizedExceptionFilter)
   Verify() {
     // Placeholder route for verification
     // Cookie Verification is Handled by Auth Guard
