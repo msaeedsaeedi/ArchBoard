@@ -17,12 +17,12 @@ export class AuthService {
 
   public isLoggedIn(): Observable<boolean> {
     return this.http
-      .get<void>(`${environment.apiUrl}/auth`, {
+      .get(`${environment.apiUrl}/auth`, {
         withCredentials: true,
       })
       .pipe(
-        map(() => true),
         catchError(() => of(false)),
+        map(() => true),
       );
   }
 
