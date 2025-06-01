@@ -8,6 +8,8 @@ import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { environment } from '../../../environments/environment';
 import { matchValidator } from '../../utils/match.validator';
+import { finalize } from 'rxjs';
+import { passwordValidator } from '../../utils/password.validator';
 
 @Component({
   selector: 'app-signup',
@@ -34,7 +36,7 @@ export class SignupComponent {
     }),
     password: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, matchValidator('confirmPassword', true)],
+      validators: [Validators.required, matchValidator('confirmPassword', true), passwordValidator()],
     }),
     confirmPassword: new FormControl('', {
       validators: [Validators.required, matchValidator('password')],
@@ -43,5 +45,24 @@ export class SignupComponent {
 
   async onSignup() {
     this.loading.set(true);
+
+    try {
+      this.authService
+        .signup(
+          this.signupForm.controls.fullName.value,
+          this.signupForm.controls.email.value,
+          this.signupForm.controls.password.value,
+        )
+        .pipe(finalize(() => this.loading.set(false)))
+        .subscribe({
+          next: () => {
+            this.toast.success('Signup', 'Successfully Signed up');
+            this.router.navigate(['dashboard']);
+          },
+          error: (err: Error) => {
+            this.toast.error('Signup', err.message);
+          },
+        });
+    } catch (error) {}
   }
 }
