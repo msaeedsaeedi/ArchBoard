@@ -2,9 +2,12 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
+  Param,
   Post,
   Req,
   Response,
@@ -43,6 +46,19 @@ export class BoardController {
       if (error instanceof Prisma.PrismaClientKnownRequestError)
         if (error.code === 'P2002') throw new ConflictException();
       throw error;
+    }
+  }
+
+  @Delete(':id')
+  async deleteBoard(@Param('id') id: number) {
+    try {
+      await this.boardService.delete(id);
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025' || e.code === 'P2016') {
+          return new NotFoundException();
+        }
+      }
     }
   }
 }
