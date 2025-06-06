@@ -36,3 +36,10 @@ model Board {
   Owner       User     @relation(fields: [OwnerId], references: [UserId])
   CreatedAt   DateTime @default(now())
 }
+
+model BoardCollaborators {
+  BoardId Int
+  UserId  Int
+
+  @@id([BoardId, UserId])
+}
