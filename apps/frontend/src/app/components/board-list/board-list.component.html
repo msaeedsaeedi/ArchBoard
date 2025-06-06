@@ -1,6 +1,6 @@
-<ul class="grid grid-cols-4 gap-4 p-4">
+<ul class="grid grid-cols-4 gap-4">
   @defer (when !loading()) {
-    @for (board of boards(); track board.id) {
+    @for (board of filteredBoards(); track board.id) {
       <li
         [class]="`${ !board.collaborated ? `bg-primary-900`: 'bg-purple-900' } aspect-[4/2] p-4 text-white flex flex-col justify-end rounded-2xl`"
       >

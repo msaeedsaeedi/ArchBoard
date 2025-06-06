@@ -15,8 +15,12 @@
       <h2 class="text-2xl font-bold text-gray-800">Boards</h2>
       <app-create-board />
     </header>
-    <main>
-      <app-board-list />
+    <main class="m-4">
+      <p-floatlabel variant="on" class="mb-4">
+        <label for="search">Search</label>
+        <input type="text" class="w-full" id="search" pInputText [(ngModel)]="searchTerm" />
+      </p-floatlabel>
+      <app-board-list [searchTerm]="searchTerm()" />
     </main>
   </section>
 </main>

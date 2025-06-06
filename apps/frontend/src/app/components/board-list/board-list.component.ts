@@ -1,5 +1,5 @@
-import { Component, inject, OnInit, signal, PLATFORM_ID } from '@angular/core';
-import { makeStateKey, TransferState } from '@angular/core';
+import { Component, inject, OnInit, signal, PLATFORM_ID, input, computed } from '@angular/core';
+import { makeStateKey, TransferState, effect } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
 import { BoardService } from '../../services/board.service';
@@ -23,8 +23,17 @@ export class BoardListComponent implements OnInit {
   platformId = inject(PLATFORM_ID);
   transferState = inject(TransferState);
 
+  searchTerm = input('');
+
   loading = signal<boolean>(true);
+
   boards = signal<Board[]>([]);
+  filteredBoards = computed<Board[]>(() =>
+    this.boards().filter(
+      (board) =>
+        board.title.includes(this.searchTerm()) || board.description?.includes(this.searchTerm()),
+    ),
+  );
 
   ngOnInit(): void {
     // Check if boards are already in TransferState (client-side reuse)
