@@ -12,7 +12,7 @@ export class BoardService {
 
   get(): Observable<Board[]> {
     return this.http.get<Board[]>(`${environment.apiUrl}/board`, { withCredentials: true }).pipe(
-      catchError(() => {
+      catchError((error: HttpErrorResponse) => {
         return throwError(() => new Error('Something went wrong. Please try again later'));
       }),
     );
