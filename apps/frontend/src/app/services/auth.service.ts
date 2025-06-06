@@ -21,8 +21,8 @@ export class AuthService {
         withCredentials: true,
       })
       .pipe(
-        catchError(() => of(false)),
         map(() => true),
+        catchError(() => of(false)),
       );
   }
 
