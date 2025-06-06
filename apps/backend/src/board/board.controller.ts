@@ -22,16 +22,7 @@ export class BoardController {
 
   @Get()
   async getBoards(@Req() request): Promise<GetBoardDto[]> {
-    return (await this.boardService.get(request.user.UserId)).flatMap(
-      (value) => {
-        return {
-          id: value.Id,
-          title: value.Name,
-          description: value.Description || undefined,
-          slug: value.Slug,
-        };
-      },
-    );
+    return await this.boardService.get(request.user.UserId);
   }
 
   @Post()

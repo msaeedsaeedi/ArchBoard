@@ -1,7 +1,9 @@
 <ul class="grid grid-cols-4 gap-4 p-4">
   @defer (when !loading()) {
     @for (board of boards(); track board.id) {
-      <li class="bg-primary-900 aspect-[4/2] p-4 text-white flex flex-col justify-end rounded-2xl">
+      <li
+        [class]="`${ !board.collaborated ? `bg-primary-900`: 'bg-purple-900' } aspect-[4/2] p-4 text-white flex flex-col justify-end rounded-2xl`"
+      >
         <div class="flex-1 text-right">
           <a [routerLink]="`/board/${board.slug}`"><i class="pi pi-external-link"></i></a>
         </div>

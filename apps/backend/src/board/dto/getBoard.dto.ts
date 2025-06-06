@@ -3,4 +3,5 @@ export class GetBoardDto {
   title: string;
   description?: string;
   slug: string;
+  collaborated: boolean;
 }

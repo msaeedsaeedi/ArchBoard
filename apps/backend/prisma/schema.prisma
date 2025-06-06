@@ -24,22 +24,27 @@ model User {
   Password   String?
   PictureUrl String?
 
-  Boards Board[]
+  Boards             Board[]
+  BoardCollaborators BoardCollaborators[]
 }
 
 model Board {
-  Id          Int      @id @default(autoincrement())
-  Name        String
-  Slug        String
-  Description String?
-  OwnerId     Int
-  Owner       User     @relation(fields: [OwnerId], references: [UserId])
-  CreatedAt   DateTime @default(now())
+  Id                 Int                  @id @default(autoincrement())
+  Name               String
+  Slug               String
+  Description        String?
+  OwnerId            Int
+  Owner              User                 @relation(fields: [OwnerId], references: [UserId])
+  CreatedAt          DateTime             @default(now())
+  BoardCollaborators BoardCollaborators[]
 }
 
 model BoardCollaborators {
   BoardId Int
   UserId  Int
+
+  Board        Board @relation(fields: [BoardId], references: [Id])
+  Collaborator User  @relation(fields: [UserId], references: [UserId])
 
   @@id([BoardId, UserId])
 }

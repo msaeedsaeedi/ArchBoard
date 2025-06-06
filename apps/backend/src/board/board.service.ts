@@ -3,6 +3,7 @@ import { CreateBoardDto } from './dto/createBoard.dto';
 import { PrismaService } from 'src/prisma.service';
 import slugify from 'slugify';
 import { Board } from 'generated/prisma';
+import { GetBoardDto } from './dto/getBoard.dto';
 
 @Injectable()
 export class BoardService {
@@ -25,14 +26,49 @@ export class BoardService {
     return slug;
   }
 
-  async get(userId: number): Promise<Board[]> {
-    return await this.db.board.findMany({
+  async get(
+    userId: number,
+    collaborated: boolean = false,
+  ): Promise<GetBoardDto[]> {
+    const result = await this.db.board.findMany({
       where: {
-        OwnerId: userId,
+        OR: [
+          { OwnerId: userId },
+          {
+            BoardCollaborators: {
+              some: {
+                UserId: userId,
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        Owner: true,
+        BoardCollaborators: {
+          include: {
+            Collaborator: true,
+          },
+        },
       },
       orderBy: {
         CreatedAt: 'desc',
       },
+    });
+
+    return result.flatMap((board) => {
+      const isOwner = board.OwnerId === userId;
+      const isCollaborator = board.BoardCollaborators.some(
+        (c) => c.UserId === userId,
+      );
+
+      return {
+        id: board.Id,
+        title: board.Name,
+        description: board.Description || undefined,
+        slug: board.Slug,
+        collaborated: !isOwner && isCollaborator,
+      };
     });
   }
 }
