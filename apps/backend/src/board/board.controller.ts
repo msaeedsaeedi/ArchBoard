@@ -50,15 +50,16 @@ export class BoardController {
   }
 
   @Delete(':id')
-  async deleteBoard(@Param('id') id: number) {
+  async deleteBoard(@Req() request, @Param('id') id: string) {
     try {
-      await this.boardService.delete(id);
+      await this.boardService.delete(Number.parseInt(id), request.user.UserId);
     } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         if (e.code === 'P2025' || e.code === 'P2016') {
-          return new NotFoundException();
+          throw new NotFoundException();
         }
       }
+      throw e;
     }
   }
 }
