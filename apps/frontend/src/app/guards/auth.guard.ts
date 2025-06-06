@@ -1,11 +1,15 @@
-import { inject } from '@angular/core';
+import { inject, PLATFORM_ID } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { firstValueFrom, lastValueFrom, map, timer } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 export const AuthGuard: CanActivateFn = async (route, state): Promise<boolean> => {
   const router = inject(Router);
   const authService = inject(AuthService);
+  const platformId = inject(PLATFORM_ID);
+
+  if (!isPlatformBrowser(platformId)) return false;
 
   const authenticated = await lastValueFrom(authService.isLoggedIn());
   if (!authenticated) router.navigate(['/login']);

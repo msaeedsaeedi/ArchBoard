@@ -2,6 +2,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -13,10 +14,16 @@ import { BoardService } from './board.service';
 import { CreateBoardDto, CreateBoardResponseDto } from './dto/createBoard.dto';
 import { plainToInstance } from 'class-transformer';
 import { Prisma } from 'generated/prisma';
+import { GetBoardDto } from './dto/getBoard.dto';
 
 @Controller('board')
 export class BoardController {
   constructor(private boardService: BoardService) {}
+
+  @Get()
+  async getBoards(@Req() request): Promise<GetBoardDto[]> {
+    return await this.boardService.get(request.user.UserId);
+  }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
