@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError, timer } from 'rxjs';
+import { catchError, map, Observable, of, throwError, timer } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Board } from '../types/board';
 
@@ -15,6 +15,15 @@ export class BoardService {
       catchError((error: HttpErrorResponse) => {
         return throwError(() => new Error('Something went wrong. Please try again later'));
       }),
+    );
+  }
+
+  delete(id: number): Observable<boolean> {
+    return this.http.delete(`${environment.apiUrl}/board/${id}`, { withCredentials: true }).pipe(
+      map(() => true),
+      catchError(() =>
+        throwError(() => new Error('Unable to delete Board. Please try again later.')),
+      ),
     );
   }
 

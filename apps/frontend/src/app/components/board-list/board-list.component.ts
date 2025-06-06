@@ -63,4 +63,16 @@ export class BoardListComponent implements OnInit {
         },
       });
   }
+
+  handleDelete(id: number, title: string) {
+    this.boardService.delete(id).subscribe({
+      next: () => {
+        this.boards.update((prev) => prev.filter((val) => val.id !== id));
+        this.toast.success('Board', `Successfully Deleted ${title}`);
+      },
+      error: (error: Error) => {
+        this.toast.error('Board', error.message);
+      },
+    });
+  }
 }
