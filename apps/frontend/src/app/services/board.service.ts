@@ -1,13 +1,22 @@
 import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError, timer } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { Board } from '../types/board';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BoardService {
-  http = inject(HttpClient);
+  private http = inject(HttpClient);
+
+  get(): Observable<Board[]> {
+    return this.http.get<Board[]>(`${environment.apiUrl}/board`, { withCredentials: true }).pipe(
+      catchError(() => {
+        return throwError(() => new Error('Something went wrong. Please try again later'));
+      }),
+    );
+  }
 
   create(title: string, description: string | null): Observable<string> {
     return this.http

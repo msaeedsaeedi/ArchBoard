@@ -1,5 +1,22 @@
-<div class="flex flex-col items-center justify-center h-screen gap-4">
-  <app-create-board />
-  <p-button label="Toggle Dark Mode" (onClick)="toggleDarkMode()" />
-  <p-button label="Logout" variant="outlined" (onClick)="logout()" />
-</div>
+<header>
+  <nav class="flex items-center p-4 border-b-1 border-b-primary-100 bg-primary-50">
+    <h1 class="text-xl font-bold text-primary hover:underline hover:text-primary-500">
+      <a href="/">ArchBoard</a>
+    </h1>
+    <ul class="flex gap-2 flex-1 justify-end">
+      <li><p-button label="Toggle Dark Mode" (onClick)="toggleDarkMode()" /></li>
+      <li><p-button label="Logout" variant="outlined" (onClick)="logout()" /></li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <section>
+    <header class="flex justify-between p-4">
+      <h2 class="text-2xl font-bold text-gray-800">Boards</h2>
+      <app-create-board />
+    </header>
+    <main>
+      <app-board-list />
+    </main>
+  </section>
+</main>
