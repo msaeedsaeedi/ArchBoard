@@ -26,6 +26,15 @@ export class BoardService {
     return slug;
   }
 
+  async delete(id: number, UserId: number): Promise<void> {
+    await this.db.board.delete({
+      where: {
+        Id: id,
+        OwnerId: UserId,
+      },
+    });
+  }
+
   async get(
     userId: number,
     collaborated: boolean = false,

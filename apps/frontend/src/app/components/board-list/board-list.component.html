@@ -4,8 +4,11 @@
       <li
         [class]="`${ !board.collaborated ? `bg-primary-900`: 'bg-purple-900' } aspect-[4/2] p-4 text-white flex flex-col justify-end rounded-2xl`"
       >
-        <div class="flex-1 text-right">
+        <div class="flex-1 flex flex-col gap-2 text-right">
           <a [routerLink]="`/board/${board.slug}`"><i class="pi pi-external-link"></i></a>
+          @if (!board.collaborated) {
+            <i class="pi pi-trash cursor-pointer" (click)="handleDelete(board.id, board.title)"></i>
+          }
         </div>
         <div>
           <h3 class="text-lg font-semibold max-w-full truncate">{{ board.title }}</h3>
@@ -23,3 +26,27 @@
     }
   }
 </ul>
+
+<!-- Board Deletion Confirmation Dialog -->
+<p-confirmdialog #cd>
+  <ng-template #headless let-message let-onAccept="onAccept" let-onReject="onReject">
+    <div class="flex flex-col items-center p-8 bg-surface-0 dark:bg-surface-900 rounded">
+      <div
+        class="rounded-full bg-primary text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20"
+      >
+        <i class="pi pi-trash !text-5xl"></i>
+      </div>
+      <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
+      <p class="mb-0">{{ message.message }}</p>
+      <div class="flex items-center gap-2 mt-6">
+        <p-button label="Delete" (onClick)="onAccept()" styleClass="w-32"></p-button>
+        <p-button
+          label="Cancel"
+          [outlined]="true"
+          (onClick)="onReject()"
+          styleClass="w-32"
+        ></p-button>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmdialog>
