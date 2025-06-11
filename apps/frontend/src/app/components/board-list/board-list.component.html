@@ -15,6 +15,7 @@
               <i
                 class="pi pi-trash cursor-pointer"
                 tabindex="1"
+                aria-label="Delete Board"
                 (click)="handleDelete(board.id, board.title)"
                 (keyup.enter)="handleDelete(board.id, board.title)"
               ></i>
@@ -25,11 +26,13 @@
               <i
                 class="pi pi-pencil cursor-pointer"
                 tabindex="2"
+                aria-label="Edit Board"
                 (click)="handleEditStart(board)"
                 (keyup.enter)="handleEditStart(board)"
               ></i>
               <i
                 tabindex="3"
+                aria-label="Manage Collaborator"
                 class="pi pi-user-plus cursor-pointer"
                 (click)="showCollaboratorsDialog(board.id)"
                 (keyup.enter)="showCollaboratorsDialog(board.id)"
