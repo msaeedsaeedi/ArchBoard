@@ -32,7 +32,7 @@ export class SignupComponent {
   toast = inject(ToastService);
 
   loading = signal<boolean>(false);
-  continueWithGoogleLink: string = `${environment.apiUrl}/auth/google`;
+  continueWithGoogleLink = `${environment.apiUrl}/auth/google`;
 
   signupForm = new FormGroup({
     fullName: new FormControl('', {
@@ -58,24 +58,21 @@ export class SignupComponent {
 
   async onSignup() {
     this.loading.set(true);
-
-    try {
-      this.authService
-        .signup(
-          this.signupForm.controls.fullName.value,
-          this.signupForm.controls.email.value,
-          this.signupForm.controls.password.value,
-        )
-        .pipe(finalize(() => this.loading.set(false)))
-        .subscribe({
-          next: () => {
-            this.toast.success('Signup', 'Successfully Signed up');
-            this.router.navigate(['dashboard']);
-          },
-          error: (err: Error) => {
-            this.toast.error('Signup', err.message);
-          },
-        });
-    } catch (error) {}
+    this.authService
+      .signup(
+        this.signupForm.controls.fullName.value,
+        this.signupForm.controls.email.value,
+        this.signupForm.controls.password.value,
+      )
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: () => {
+          this.toast.success('Signup', 'Successfully Signed up');
+          this.router.navigate(['dashboard']);
+        },
+        error: (err: Error) => {
+          this.toast.error('Signup', err.message);
+        },
+      });
   }
 }

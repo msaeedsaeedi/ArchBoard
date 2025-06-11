@@ -14,7 +14,7 @@ import { GoogleStrategy } from './strategies/google.strategy';
     UsersModule,
     PassportModule,
     JwtModule.registerAsync({
-      useFactory: async (apiConfigService: ApiConfigService) => ({
+      useFactory: (apiConfigService: ApiConfigService) => ({
         secret: apiConfigService.JWT_SECRET,
         signOptions: { expiresIn: apiConfigService.JWT_EXPIRESIN },
       }),

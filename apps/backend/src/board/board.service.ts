@@ -60,6 +60,8 @@ export class BoardService {
 
   async get(
     userId: number,
+    // TODO: Use collaborated boolean
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     collaborated: boolean = false,
   ): Promise<GetBoardDto[]> {
     const result = await this.db.board.findMany({

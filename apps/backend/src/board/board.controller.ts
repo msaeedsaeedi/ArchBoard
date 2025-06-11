@@ -11,13 +11,12 @@ import {
   Patch,
   Post,
   Req,
-  Response,
 } from '@nestjs/common';
-import { Response as EResponse } from 'express';
+import { Request } from 'express';
 import { BoardService } from './board.service';
 import { CreateBoardDto, CreateBoardResponseDto } from './dto/createBoard.dto';
 import { plainToInstance } from 'class-transformer';
-import { Prisma } from 'generated/prisma';
+import { Prisma, User } from 'generated/prisma';
 import { GetBoardDto } from './dto/getBoard.dto';
 import { UpdateBoardDto } from './dto/updateBoard.dto';
 import { AddCollaboratorDto } from './dto/addCollaborator.dto';
@@ -27,22 +26,20 @@ export class BoardController {
   constructor(private boardService: BoardService) {}
 
   @Get()
-  async getBoards(@Req() request): Promise<GetBoardDto[]> {
-    return await this.boardService.get(request.user.UserId);
+  async getBoards(@Req() request: Request): Promise<GetBoardDto[]> {
+    const user = request.user as User;
+    return await this.boardService.get(user.UserId);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createBoard(
-    @Req() request,
+    @Req() request: Request,
     @Body() createBoardDto: CreateBoardDto,
-    @Response({ passthrough: true }) response: EResponse,
   ): Promise<CreateBoardResponseDto> {
+    const user = request.user as User;
     try {
-      const slug = await this.boardService.create(
-        createBoardDto,
-        Number.parseInt(request.user.UserId),
-      );
+      const slug = await this.boardService.create(createBoardDto, user.UserId);
 
       return plainToInstance(CreateBoardResponseDto, { slug });
     } catch (error) {
@@ -53,9 +50,10 @@ export class BoardController {
   }
 
   @Delete(':id')
-  async deleteBoard(@Req() request, @Param('id') id: string) {
+  async deleteBoard(@Req() request: Request, @Param('id') id: string) {
+    const user = request.user as User;
     try {
-      await this.boardService.delete(Number.parseInt(id), request.user.UserId);
+      await this.boardService.delete(Number.parseInt(id), user.UserId);
     } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         if (e.code === 'P2025' || e.code === 'P2016') {
@@ -68,12 +66,13 @@ export class BoardController {
 
   @Patch(':id')
   async updateBoard(
-    @Req() request,
+    @Req() request: Request,
     @Param('id') id: string,
     @Body() updateBoardDto: UpdateBoardDto,
   ) {
+    const user = request.user as User;
     try {
-      await this.boardService.update(Number.parseInt(id), request.user.UserId, {
+      await this.boardService.update(Number.parseInt(id), user.UserId, {
         Name: updateBoardDto.title,
         Description: updateBoardDto.description,
       });
@@ -89,7 +88,6 @@ export class BoardController {
 
   @Post(':id/collaborators')
   async addCollaborators(
-    @Req() request,
     @Param('id') id: string,
     @Body() addcollaboratorDto: AddCollaboratorDto,
   ) {

@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, of, throwError, timer } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Board } from '../types/board';
 
@@ -12,7 +12,7 @@ export class BoardService {
 
   get(): Observable<Board[]> {
     return this.http.get<Board[]>(`${environment.apiUrl}/board`, { withCredentials: true }).pipe(
-      catchError((error: HttpErrorResponse) => {
+      catchError(() => {
         return throwError(() => new Error('Something went wrong. Please try again later'));
       }),
     );

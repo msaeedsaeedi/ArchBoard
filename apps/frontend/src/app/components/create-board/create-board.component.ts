@@ -1,11 +1,10 @@
-import { Component, inject, Injector, input, model, signal } from '@angular/core';
+import { Component, inject, Injector, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
-import { BoardService } from '../../services/board.service';
 import { Router } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 

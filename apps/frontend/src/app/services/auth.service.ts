@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, of, tap, throwError, timer } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { ToastService } from './toast.service';
@@ -12,8 +12,6 @@ export class AuthService {
   private http = inject(HttpClient);
   router = inject(Router);
   toast = inject(ToastService);
-
-  constructor() {}
 
   public isLoggedIn(): Observable<boolean> {
     return this.http

@@ -2,7 +2,6 @@ import {
   Controller,
   Post,
   UseGuards,
-  Response,
   HttpStatus,
   HttpCode,
   Get,
@@ -15,7 +14,7 @@ import {
 import { LocalAuthGuard } from './guards/local.guard';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
-import { Response as EResponse, response } from 'express';
+import { Response, Request } from 'express';
 import { GoogleOauthGuard } from './guards/google.guard';
 import { Prisma, User } from 'generated/prisma';
 import { ApiConfigService } from 'src/config/apiConfig.service';
@@ -34,12 +33,12 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(
-    @Req() request,
-    @Response({ passthrough: true }) response: EResponse,
+  login(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
   ) {
     const user = request.user as User;
-    await this.authService.login(user.Email, user.UserId.toString(), response);
+    this.authService.login(user.Email, user.UserId.toString(), response);
   }
 
   @Public()
@@ -47,7 +46,7 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   async signup(
     @Body() signupDto: SignupDto,
-    @Response({ passthrough: true }) response: EResponse,
+    @Res({ passthrough: true }) response: Response,
   ) {
     try {
       const user = await this.authService.signup(
@@ -59,11 +58,7 @@ export class AuthController {
         signupDto.password,
       );
 
-      await this.authService.login(
-        user.Email,
-        user.UserId.toString(),
-        response,
-      );
+      this.authService.login(user.Email, user.UserId.toString(), response);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') throw new ConflictException();
@@ -79,15 +74,18 @@ export class AuthController {
   @Public()
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
-  async googleAuthCallback(@Req() request, @Res() response: EResponse) {
+  googleAuthCallback(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+  ) {
     const user = request.user as User;
-    await this.authService.login(user.Email, user.UserId.toString(), response);
+    this.authService.login(user.Email, user.UserId.toString(), response);
     response.redirect(this.apiConfigService.AUTH_CALLBACK);
   }
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@Response() res: any) {
+  logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('access_token', {
       httpOnly: true,
       secure: process.env.NODE_ENV === Environment.Production,

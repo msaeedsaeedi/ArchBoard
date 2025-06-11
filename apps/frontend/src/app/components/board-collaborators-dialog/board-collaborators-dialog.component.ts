@@ -30,7 +30,7 @@ export class BoardCollaboratorsDialogComponent {
 
   addCollaboratorLoading = signal<boolean>(false);
 
-  roleOptions: any[] = [
+  roleOptions: unknown[] = [
     { label: 'Editor', value: 'EDITOR' },
     { label: 'Viewer', value: 'VIEWER' },
   ];
