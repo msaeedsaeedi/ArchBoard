@@ -4,7 +4,7 @@
     <input type="email" class="w-full" id="email" pInputText formControlName="email" />
   </p-floatlabel>
   <div class="flex justify-between">
-    <p-selectbutton [options]="roleOptions" formControlName="role" />
+    <p-selectbutton [options]="roleOptions" formControlName="role" [unselectable]="true" />
     <p-button
       label="Add"
       type="submit"
