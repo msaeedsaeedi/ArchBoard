@@ -1,27 +1,25 @@
-import { Component, inject, OnInit, signal, PLATFORM_ID, input, computed } from '@angular/core';
-import { makeStateKey, TransferState, effect } from '@angular/core';
+import { Component, inject, OnInit, signal, input, computed, Injector } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
 import { BoardService } from '../../services/board.service';
 import { Board } from '../../types/board';
-import { finalize } from 'rxjs';
+import { delay, finalize } from 'rxjs';
 import { ToastService } from '../../services/toast.service';
-import { isPlatformBrowser } from '@angular/common';
-
-// Define a state key for the boards
-const BOARDS_KEY = makeStateKey<Board[]>('boards');
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-board-list',
-  imports: [RouterModule, SkeletonModule],
+  imports: [RouterModule, SkeletonModule, ConfirmDialog, ButtonModule],
+  providers: [ConfirmationService],
   templateUrl: './board-list.component.html',
   styleUrl: './board-list.component.css',
 })
 export class BoardListComponent implements OnInit {
   boardService = inject(BoardService);
+  injector = inject(Injector);
   toast = inject(ToastService);
-  platformId = inject(PLATFORM_ID);
-  transferState = inject(TransferState);
 
   searchTerm = input('');
 
@@ -36,42 +34,38 @@ export class BoardListComponent implements OnInit {
   );
 
   ngOnInit(): void {
-    // Check if boards are already in TransferState (client-side reuse)
-    const cachedBoards = this.transferState.get(BOARDS_KEY, null);
-    if (cachedBoards) {
-      this.boards.set(cachedBoards);
-      this.loading.set(false);
-      return;
-    }
-
-    // Fetch boards (only in browser or server during SSR)
     this.boardService
       .get()
-      .pipe(finalize(() => this.loading.set(false)))
+      .pipe(
+        delay(500),
+        finalize(() => this.loading.set(false)),
+      )
       .subscribe({
         next: (response) => {
           this.boards.set(response);
-          // Store in TransferState for client-side reuse
-          if (!isPlatformBrowser(this.platformId)) {
-            this.transferState.set(BOARDS_KEY, response);
-          }
         },
         error: (error: Error) => {
-          if (isPlatformBrowser(this.platformId)) {
-            this.toast.error('Error', error.message);
-          }
+          this.toast.error('Error', error.message);
         },
       });
   }
 
-  handleDelete(id: number, title: string) {
-    this.boardService.delete(id).subscribe({
-      next: () => {
-        this.boards.update((prev) => prev.filter((val) => val.id !== id));
-        this.toast.success('Board', `Successfully Deleted ${title}`);
-      },
-      error: (error: Error) => {
-        this.toast.error('Board', error.message);
+  async handleDelete(id: number, title: string) {
+    const ApiModule = await import('primeng/api');
+    const confirmationService = this.injector.get(ApiModule.ConfirmationService);
+    confirmationService.confirm({
+      header: 'Are you sure?',
+      message: 'Please confirm to proceed.',
+      accept: () => {
+        this.boardService.delete(id).subscribe({
+          next: () => {
+            this.boards.update((prev) => prev.filter((val) => val.id !== id));
+            this.toast.success('Board', `Successfully Deleted ${title}`);
+          },
+          error: (error: Error) => {
+            this.toast.error('Board', error.message);
+          },
+        });
       },
     });
   }
