@@ -65,7 +65,7 @@ export class BoardService {
       .post(
         `${environment.apiUrl}/board/${boardId}/collaborators`,
         {
-          collaboratorEmail,
+          email: collaboratorEmail,
         },
         { withCredentials: true },
       )
