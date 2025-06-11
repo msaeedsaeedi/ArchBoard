@@ -93,17 +93,10 @@ export class BoardController {
     @Param('id') id: string,
     @Body() addcollaboratorDto: AddCollaboratorDto,
   ) {
-    try {
-      await this.boardService.addCollaborator(
-        Number.parseInt(id),
-        addcollaboratorDto,
-      );
-    } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') throw new NotFoundException();
-        else if (e.code === '2002') throw new ConflictException();
-      }
-      throw e;
-    }
+    // Service Handles Exceptions
+    await this.boardService.addCollaborator(
+      Number.parseInt(id),
+      addcollaboratorDto,
+    );
   }
 }

@@ -1,8 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateBoardDto } from './dto/createBoard.dto';
 import { PrismaService } from 'src/prisma.service';
 import slugify from 'slugify';
-import { Board } from 'generated/prisma';
+import { Board, Prisma } from 'generated/prisma';
 import { GetBoardDto } from './dto/getBoard.dto';
 import { AddCollaboratorDto } from './dto/addCollaborator.dto';
 
@@ -100,25 +105,44 @@ export class BoardService {
   }
 
   async addCollaborator(boardId: number, dto: AddCollaboratorDto) {
-    const collaboratorId = (
-      await this.db.user.findFirstOrThrow({
-        where: {
-          Email: dto.email,
-        },
-      })
-    ).UserId;
+    let collaboratorId: number | undefined = undefined;
 
-    await this.db.board.update({
-      where: {
-        Id: boardId,
-      },
-      data: {
-        BoardCollaborators: {
-          create: {
-            UserId: collaboratorId,
+    // Find Collaborator UserId
+    try {
+      collaboratorId = (
+        await this.db.user.findFirstOrThrow({
+          where: {
+            Email: dto.email,
+          },
+        })
+      ).UserId;
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') throw new NotFoundException();
+      }
+      throw e;
+    }
+
+    // Update Board with collaborator
+    try {
+      await this.db.board.update({
+        where: {
+          Id: boardId,
+        },
+        data: {
+          BoardCollaborators: {
+            create: {
+              UserId: collaboratorId,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') throw new UnauthorizedException();
+        if (e.code === 'P2002') throw new ConflictException();
+      }
+      throw e;
+    }
   }
 }
