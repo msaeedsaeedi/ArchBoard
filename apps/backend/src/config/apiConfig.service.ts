@@ -1,4 +1,4 @@
-import { Dependencies, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Environment, GOOGLE_ENV } from './types';
 

@@ -8,12 +8,12 @@ import { ApiConfigService } from './config/apiConfig.service';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ApiConfigService);
-  
+
   app.enableCors(createCorsOptions(configService));
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
-  
-  const PORT = configService.PORT
+
+  const PORT = configService.PORT;
   await app.listen(PORT);
 }
-bootstrap();
+bootstrap().catch((e) => console.error(e));

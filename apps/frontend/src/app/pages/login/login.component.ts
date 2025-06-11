@@ -24,7 +24,7 @@ export class LoginComponent {
   toast = inject(ToastService);
 
   loading = signal<boolean>(false);
-  signInWithGoogleLink: string = `${environment.apiUrl}/auth/google`;
+  signInWithGoogleLink = `${environment.apiUrl}/auth/google`;
 
   loginForm = new FormGroup({
     email: new FormControl('', {

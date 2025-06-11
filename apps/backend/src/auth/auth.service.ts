@@ -32,6 +32,7 @@ export class AuthService {
     const isMatch = await bcrypt.compare(pass, user.Password);
     if (!isMatch) return null;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { Password, ...result } = user;
     return result;
   }
@@ -42,13 +43,14 @@ export class AuthService {
   ): Promise<Partial<User> | null> {
     const user = await this.usersService.findOne(email);
     if (user && user.OAuthId === OAuthId) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { Password, ...result } = user;
       return result;
     }
     return null;
   }
 
-  async login(email: string, userId: string, response: Response) {
+  login(email: string, userId: string, response: Response) {
     const payload: AccessTokenPayload = {
       Email: email,
       UserId: Number.parseInt(userId),

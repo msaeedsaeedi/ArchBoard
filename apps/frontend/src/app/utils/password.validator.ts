@@ -3,7 +3,7 @@ import validator from 'validator';
 import { PasswordValidationRules } from '@repo/shared';
 
 export function passwordValidator(): ValidatorFn {
-  return (control: AbstractControl): { [key: string]: any } | null => {
+  return (control: AbstractControl): Record<string, unknown> | null => {
     const value = control.value;
     if (!value) return null;
 

@@ -23,9 +23,8 @@ export class UsersService {
     oAuthId?: string,
     password?: string,
   ): Promise<User> {
-    if (password)
-      password = await hashPassword(password);
-    
+    if (password) password = await hashPassword(password);
+
     return this.db.user.create({
       data: {
         Provider: provider,
