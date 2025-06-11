@@ -74,7 +74,7 @@ export class BoardService {
         map(() => true),
         catchError((error: HttpErrorResponse) => {
           if (error.status == HttpStatusCode.Conflict)
-            return throwError(() => new Error('Collaborator Already Exist'));
+            return throwError(() => new Error('Collaborator Already Exists'));
           if (error.status == HttpStatusCode.NotFound)
             return throwError(() => new Error('Collaborator Not Found'));
           if (error.status == HttpStatusCode.Unauthorized)
