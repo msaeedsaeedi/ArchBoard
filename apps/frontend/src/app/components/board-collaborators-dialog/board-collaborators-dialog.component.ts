@@ -7,10 +7,17 @@ import { BoardService } from '../../services/board.service';
 import { finalize } from 'rxjs';
 import { ToastService } from '../../services/toast.service';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @Component({
   selector: 'app-board-collaborators-dialog',
-  imports: [ReactiveFormsModule, FloatLabelModule, InputTextModule, ButtonModule],
+  imports: [
+    ReactiveFormsModule,
+    FloatLabelModule,
+    InputTextModule,
+    ButtonModule,
+    SelectButtonModule,
+  ],
   templateUrl: './board-collaborators-dialog.component.html',
   styleUrl: './board-collaborators-dialog.component.css',
 })
@@ -23,16 +30,27 @@ export class BoardCollaboratorsDialogComponent {
 
   addCollaboratorLoading = signal<boolean>(false);
 
+  roleOptions: any[] = [
+    { label: 'Editor', value: 'EDITOR' },
+    { label: 'Viewer', value: 'VIEWER' },
+  ];
+
   addCollaboratorForm = new FormGroup({
     email: new FormControl('', { nonNullable: true, validators: Validators.required }),
+    role: new FormControl('VIEWER', {
+      nonNullable: true,
+      validators: Validators.required,
+    }),
   });
 
   handleCollaboratorAdd() {
     const CollaboratorEmail = this.addCollaboratorForm.value.email;
+    const CollaboratorRole = this.addCollaboratorForm.value.role;
     if (!CollaboratorEmail) return;
+    if (!CollaboratorRole) return;
     this.addCollaboratorLoading.set(true);
     this.boardService
-      .addCollaborator(this.id(), CollaboratorEmail)
+      .addCollaborator(this.id(), CollaboratorEmail, CollaboratorRole)
       .pipe(finalize(() => this.addCollaboratorLoading.set(false)))
       .subscribe({
         next: () => {

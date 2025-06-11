@@ -133,6 +133,7 @@ export class BoardService {
           BoardCollaborators: {
             create: {
               UserId: collaboratorId,
+              Role: dto.role,
             },
           },
         },

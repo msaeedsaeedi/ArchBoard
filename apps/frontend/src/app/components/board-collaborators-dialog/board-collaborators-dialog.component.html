@@ -3,10 +3,13 @@
     <label for="email">Collaborator Email</label>
     <input type="email" class="w-full" id="email" pInputText formControlName="email" />
   </p-floatlabel>
-  <p-button
-    label="Add"
-    type="submit"
-    [disabled]="!this.addCollaboratorForm.valid"
-    [loading]="addCollaboratorLoading()"
-  />
+  <div class="flex justify-between">
+    <p-selectbutton [options]="roleOptions" formControlName="role" />
+    <p-button
+      label="Add"
+      type="submit"
+      [disabled]="!this.addCollaboratorForm.valid"
+      [loading]="addCollaboratorLoading()"
+    />
+  </div>
 </form>

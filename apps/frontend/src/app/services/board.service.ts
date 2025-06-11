@@ -60,12 +60,13 @@ export class BoardService {
       );
   }
 
-  addCollaborator(boardId: number, collaboratorEmail: string): Observable<boolean> {
+  addCollaborator(boardId: number, collaboratorEmail: string, role: string): Observable<boolean> {
     return this.http
       .post(
         `${environment.apiUrl}/board/${boardId}/collaborators`,
         {
           email: collaboratorEmail,
+          role,
         },
         { withCredentials: true },
       )
