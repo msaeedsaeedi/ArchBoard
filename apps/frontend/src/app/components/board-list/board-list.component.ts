@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
 import { BoardService } from '../../services/board.service';
 import { Board } from '../../types/board';
-import { delay, finalize, timer } from 'rxjs';
+import {} from 'rxjs';
 import { ToastService } from '../../services/toast.service';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ButtonModule } from 'primeng/button';
