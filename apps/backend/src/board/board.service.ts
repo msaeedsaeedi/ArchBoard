@@ -26,6 +26,23 @@ export class BoardService {
     return slug;
   }
 
+  async update(
+    id: number,
+    UserId: number,
+    payload: Pick<Board, 'Name' | 'Description'>,
+  ) {
+    await this.db.board.update({
+      where: {
+        Id: id,
+        OwnerId: UserId,
+      },
+      data: {
+        Name: payload.Name,
+        Description: payload.Description,
+      },
+    });
+  }
+
   async delete(id: number, UserId: number): Promise<void> {
     await this.db.board.delete({
       where: {
