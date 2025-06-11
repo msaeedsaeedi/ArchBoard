@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
 import { BoardService } from '../../services/board.service';
 import { Board } from '../../types/board';
-import {} from 'rxjs';
+import { delay, finalize } from 'rxjs';
 import { ToastService } from '../../services/toast.service';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ButtonModule } from 'primeng/button';
@@ -57,6 +57,9 @@ export class BoardListComponent implements OnInit {
     title: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
     description: new FormControl(''),
   });
+
+  // Collaborator States
+  isCollaboratorDialogVisible = signal<boolean>(false);
 
   // Board Data
   boards = signal<Board[]>([]);
