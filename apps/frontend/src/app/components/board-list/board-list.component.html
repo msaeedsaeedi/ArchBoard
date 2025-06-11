@@ -23,7 +23,7 @@
               <i class="pi pi-pencil cursor-pointer" (click)="handleEditStart(board)"></i>
               <i
                 class="pi pi-user-plus cursor-pointer"
-                (click)="isCollaboratorDialogVisible.set(true)"
+                (click)="showCollaboratorsDialog(board.id)"
               ></i>
             }
           </div>
