@@ -4,15 +4,21 @@
       <li
         [class]="`${ !board.collaborated ? `bg-primary-900`: 'bg-purple-900' } aspect-[4/2] p-4 text-white flex flex-col justify-end rounded-2xl`"
       >
-        <div class="flex-1 flex flex-col gap-2 text-right">
+        <div class="flex-1 flex flex-col gap-2 items-end">
           <a [routerLink]="`/board/${board.slug}`"><i class="pi pi-external-link"></i></a>
           @if (!board.collaborated) {
             <i class="pi pi-trash cursor-pointer" (click)="handleDelete(board.id, board.title)"></i>
           }
         </div>
-        <div>
+        <div class="relative">
           <h3 class="text-lg font-semibold max-w-full truncate">{{ board.title }}</h3>
           <p class="max-w-full truncate">{{ board.description }}</p>
+          @if (!board.collaborated) {
+            <i
+              class="pi pi-pencil absolute bottom-1 right-0 cursor-pointer"
+              (click)="handleEditStart(board)"
+            ></i>
+          }
         </div>
       </li>
     } @empty {
@@ -50,3 +56,39 @@
     </div>
   </ng-template>
 </p-confirmdialog>
+
+<!-- Edit Dialog -->
+<p-dialog
+  header="Edit Board"
+  [modal]="true"
+  [(visible)]="IsEditDialogVisible"
+  [style]="{ width: '25rem' }"
+  (onHide)="handleEditDiscard()"
+>
+  <form [formGroup]="EditForm" (ngSubmit)="handleEditSave()">
+    <p-floatlabel variant="on" class="my-4">
+      <label for="title">Title</label>
+      <input type="text" class="w-full" id="title" pInputText formControlName="title" />
+    </p-floatlabel>
+    <p-floatlabel variant="on" class="mb-4">
+      <label for="description">Description (optional)</label>
+      <textarea
+        rows="5"
+        id="description"
+        fluid
+        pTextarea
+        formControlName="description"
+        class="resize-none"
+      ></textarea>
+    </p-floatlabel>
+    <div class="flex justify-end gap-2">
+      <p-button label="Cancel" severity="secondary" (onClick)="handleEditDiscard()" />
+      <p-button
+        label="Save"
+        type="submit"
+        [disabled]="!this.EditForm.valid"
+        [loading]="editSaveLoading()"
+      />
+    </div>
+  </form>
+</p-dialog>

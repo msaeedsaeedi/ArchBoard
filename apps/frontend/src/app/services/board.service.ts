@@ -18,6 +18,17 @@ export class BoardService {
     );
   }
 
+  update(id: number, title: string, description?: string): Observable<boolean> {
+    return this.http
+      .patch(`${environment.apiUrl}/board/${id}`, { title, description }, { withCredentials: true })
+      .pipe(
+        map(() => true),
+        catchError(() =>
+          throwError(() => new Error('Something went wrong. Please try again later.')),
+        ),
+      );
+  }
+
   delete(id: number): Observable<boolean> {
     return this.http.delete(`${environment.apiUrl}/board/${id}`, { withCredentials: true }).pipe(
       map(() => true),

@@ -8,6 +8,7 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  Patch,
   Post,
   Req,
   Response,
@@ -18,6 +19,7 @@ import { CreateBoardDto, CreateBoardResponseDto } from './dto/createBoard.dto';
 import { plainToInstance } from 'class-transformer';
 import { Prisma } from 'generated/prisma';
 import { GetBoardDto } from './dto/getBoard.dto';
+import { UpdateBoardDto } from './dto/updateBoard.dto';
 
 @Controller('board')
 export class BoardController {
@@ -53,6 +55,27 @@ export class BoardController {
   async deleteBoard(@Req() request, @Param('id') id: string) {
     try {
       await this.boardService.delete(Number.parseInt(id), request.user.UserId);
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025' || e.code === 'P2016') {
+          throw new NotFoundException();
+        }
+      }
+      throw e;
+    }
+  }
+
+  @Patch(':id')
+  async updateBoard(
+    @Req() request,
+    @Param('id') id: string,
+    @Body() updateBoardDto: UpdateBoardDto,
+  ) {
+    try {
+      await this.boardService.update(Number.parseInt(id), request.user.UserId, {
+        Name: updateBoardDto.title,
+        Description: updateBoardDto.description,
+      });
     } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         if (e.code === 'P2025' || e.code === 'P2016') {
