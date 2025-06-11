@@ -2,23 +2,31 @@
   @defer (when !loading()) {
     @for (board of filteredBoards(); track board.id) {
       <li
-        [class]="`${ !board.collaborated ? `bg-primary-900`: 'bg-purple-900' } aspect-[4/2] p-4 text-white flex flex-col justify-end rounded-2xl`"
+        [class]="`${ !board.collaborated ? `bg-primary-900`: 'bg-purple-900' } aspect-[4/2] p-4 text-white rounded-2xl flex gap-2`"
       >
-        <div class="flex-1 flex flex-col gap-2 items-end">
-          <a [routerLink]="`/board/${board.slug}`"><i class="pi pi-external-link"></i></a>
-          @if (!board.collaborated) {
-            <i class="pi pi-trash cursor-pointer" (click)="handleDelete(board.id, board.title)"></i>
-          }
-        </div>
-        <div class="relative">
+        <div class="min-w-0 flex-1 self-end">
           <h3 class="text-lg font-semibold max-w-full truncate">{{ board.title }}</h3>
           <p class="max-w-full truncate">{{ board.description }}</p>
-          @if (!board.collaborated) {
-            <i
-              class="pi pi-pencil absolute bottom-1 right-0 cursor-pointer"
-              (click)="handleEditStart(board)"
-            ></i>
-          }
+        </div>
+        <div class="flex flex-col justify-between mb-1.5">
+          <div class="flex flex-col gap-2">
+            <a [routerLink]="`/board/${board.slug}`"><i class="pi pi-external-link"></i></a>
+            @if (!board.collaborated) {
+              <i
+                class="pi pi-trash cursor-pointer"
+                (click)="handleDelete(board.id, board.title)"
+              ></i>
+            }
+          </div>
+          <div class="flex flex-col gap-2">
+            @if (!board.collaborated) {
+              <i class="pi pi-pencil cursor-pointer" (click)="handleEditStart(board)"></i>
+              <i
+                class="pi pi-user-plus cursor-pointer"
+                (click)="showCollaboratorsDialog(board.id)"
+              ></i>
+            }
+          </div>
         </div>
       </li>
     } @empty {

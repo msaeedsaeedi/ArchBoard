@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
 import { BoardService } from '../../services/board.service';
 import { Board } from '../../types/board';
-import {} from 'rxjs';
+import { delay, finalize } from 'rxjs';
 import { ToastService } from '../../services/toast.service';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ButtonModule } from 'primeng/button';
@@ -13,6 +13,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { TextareaModule } from 'primeng/textarea';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DialogService } from 'primeng/dynamicdialog';
+import { BoardCollaboratorsDialogComponent } from '../board-collaborators-dialog/board-collaborators-dialog.component';
 
 interface BoardFormValue {
   id: number | null;
@@ -33,7 +35,7 @@ interface BoardFormValue {
     TextareaModule,
     ReactiveFormsModule,
   ],
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, DialogService],
   templateUrl: './board-list.component.html',
   styleUrl: './board-list.component.css',
 })
@@ -146,5 +148,21 @@ export class BoardListComponent implements OnInit {
   handleEditDiscard() {
     this.IsEditDialogVisible.set(false);
     this.EditForm.reset({ id: null, title: '', description: undefined });
+  }
+
+  async showCollaboratorsDialog(boardId: number) {
+    const dialogServiceModule = await import('primeng/dynamicdialog');
+    const dialogService = this.injector.get(dialogServiceModule.DialogService);
+
+    dialogService.open(BoardCollaboratorsDialogComponent, {
+      header: 'Edit Collaborators',
+      inputValues: {
+        id: boardId,
+      },
+      focusOnShow: false,
+      modal: true,
+      closable: true,
+      width: '45dvw',
+    });
   }
 }

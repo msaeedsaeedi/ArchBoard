@@ -59,4 +59,28 @@ export class BoardService {
         map((value) => value.slug),
       );
   }
+
+  addCollaborator(boardId: number, collaboratorEmail: string, role: string): Observable<boolean> {
+    return this.http
+      .post(
+        `${environment.apiUrl}/board/${boardId}/collaborators`,
+        {
+          email: collaboratorEmail,
+          role,
+        },
+        { withCredentials: true },
+      )
+      .pipe(
+        map(() => true),
+        catchError((error: HttpErrorResponse) => {
+          if (error.status == HttpStatusCode.Conflict)
+            return throwError(() => new Error('Collaborator Already Exists'));
+          if (error.status == HttpStatusCode.NotFound)
+            return throwError(() => new Error('Collaborator Not Found'));
+          if (error.status == HttpStatusCode.Unauthorized)
+            return throwError(() => new Error('Board Not found'));
+          return throwError(() => new Error('Failed to add collaborator. Please try again later'));
+        }),
+      );
+  }
 }

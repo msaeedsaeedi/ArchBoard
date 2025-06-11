@@ -1,0 +1,15 @@
+<form (ngSubmit)="handleCollaboratorAdd()" [formGroup]="addCollaboratorForm">
+  <p-floatlabel variant="on" class="my-4">
+    <label for="email">Collaborator Email</label>
+    <input type="email" class="w-full" id="email" pInputText formControlName="email" />
+  </p-floatlabel>
+  <div class="flex justify-between">
+    <p-selectbutton [options]="roleOptions" formControlName="role" [unselectable]="true" />
+    <p-button
+      label="Add"
+      type="submit"
+      [disabled]="!this.addCollaboratorForm.valid"
+      [loading]="addCollaboratorLoading()"
+    />
+  </div>
+</form>

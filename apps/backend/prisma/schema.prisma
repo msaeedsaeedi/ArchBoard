@@ -42,9 +42,15 @@ model Board {
 model BoardCollaborators {
   BoardId Int
   UserId  Int
+  Role    CollaboratorRole @default(VIEWER)
 
   Board        Board @relation(fields: [BoardId], references: [Id])
   Collaborator User  @relation(fields: [UserId], references: [UserId])
 
   @@id([BoardId, UserId])
+}
+
+enum CollaboratorRole {
+  VIEWER
+  EDITOR
 }

@@ -20,6 +20,7 @@ import { plainToInstance } from 'class-transformer';
 import { Prisma } from 'generated/prisma';
 import { GetBoardDto } from './dto/getBoard.dto';
 import { UpdateBoardDto } from './dto/updateBoard.dto';
+import { AddCollaboratorDto } from './dto/addCollaborator.dto';
 
 @Controller('board')
 export class BoardController {
@@ -84,5 +85,18 @@ export class BoardController {
       }
       throw e;
     }
+  }
+
+  @Post(':id/collaborators')
+  async addCollaborators(
+    @Req() request,
+    @Param('id') id: string,
+    @Body() addcollaboratorDto: AddCollaboratorDto,
+  ) {
+    // Service Handles Exceptions
+    await this.boardService.addCollaborator(
+      Number.parseInt(id),
+      addcollaboratorDto,
+    );
   }
 }
