@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma.service';
 import slugify from 'slugify';
 import { Board } from 'generated/prisma';
 import { GetBoardDto } from './dto/getBoard.dto';
+import { AddCollaboratorDto } from './dto/addCollaborator.dto';
 
 @Injectable()
 export class BoardService {
@@ -95,6 +96,29 @@ export class BoardService {
         slug: board.Slug,
         collaborated: !isOwner && isCollaborator,
       };
+    });
+  }
+
+  async addCollaborator(boardId: number, dto: AddCollaboratorDto) {
+    const collaboratorId = (
+      await this.db.user.findFirstOrThrow({
+        where: {
+          Email: dto.email,
+        },
+      })
+    ).UserId;
+
+    await this.db.board.update({
+      where: {
+        Id: boardId,
+      },
+      data: {
+        BoardCollaborators: {
+          create: {
+            UserId: collaboratorId,
+          },
+        },
+      },
     });
   }
 }

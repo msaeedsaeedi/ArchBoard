@@ -20,6 +20,7 @@ import { plainToInstance } from 'class-transformer';
 import { Prisma } from 'generated/prisma';
 import { GetBoardDto } from './dto/getBoard.dto';
 import { UpdateBoardDto } from './dto/updateBoard.dto';
+import { AddCollaboratorDto } from './dto/addCollaborator.dto';
 
 @Controller('board')
 export class BoardController {
@@ -81,6 +82,26 @@ export class BoardController {
         if (e.code === 'P2025' || e.code === 'P2016') {
           throw new NotFoundException();
         }
+      }
+      throw e;
+    }
+  }
+
+  @Post(':id/collaborators')
+  async addCollaborators(
+    @Req() request,
+    @Param('id') id: string,
+    @Body() addcollaboratorDto: AddCollaboratorDto,
+  ) {
+    try {
+      await this.boardService.addCollaborator(
+        Number.parseInt(id),
+        addcollaboratorDto,
+      );
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') throw new NotFoundException();
+        else if (e.code === '2002') throw new ConflictException();
       }
       throw e;
     }
