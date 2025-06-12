@@ -5,7 +5,7 @@ import {
   IsStrongPassword,
   IsUrl,
 } from 'class-validator';
-import { PasswordValidationRules } from '@repo/shared';
+import { PasswordValidationRules } from '@archboard/shared';
 
 export class SignupDto {
   @IsString()
