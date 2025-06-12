@@ -38,10 +38,9 @@ jobs:
 
       - name: Create Tag
         if: >
-          ${{
-            (github.event_name == 'workflow_call' && inputs.create-tag == true) ||
-            (github.event_name == 'push')
-          }} && steps.changesets.outputs.hasChangesets == 'true'
+          steps.changesets.outputs.hasChangesets == 'true' && 
+          ((github.event_name == 'workflow_call' && inputs.create-tag == true) ||
+          github.event_name == 'push')
         run: |
           VERSION=$(node -p "require('./package.json').version")
           git tag v$VERSION
