@@ -1,0 +1,64 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: false
+        type: string
+        default: 'production'
+    secrets:
+      DEPLOY_TOKEN:
+        required: true
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
+
+jobs:
+  setup:
+    uses: ./.github/workflows/setup.yml
+    with:
+      node-version: '20'
+  
+  deploy:
+    needs: setup
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      # Use the cache from the setup job
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pnpm-store
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install Dependencies
+        if: steps.pnpm-cache.outputs.cache-hit != 'true'
+        run: pnpm install
+        working-directory: .
+
+      - name: Build
+        run: pnpm build
+
+      - name: Deploy
+        run: pnpm deploy
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}

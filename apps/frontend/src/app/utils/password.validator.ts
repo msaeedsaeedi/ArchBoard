@@ -1,6 +1,6 @@
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 import validator from 'validator';
-import { PasswordValidationRules } from '@repo/shared';
+import { PasswordValidationRules } from '@archboard/shared';
 
 export function passwordValidator(): ValidatorFn {
   return (control: AbstractControl): Record<string, unknown> | null => {
@@ -22,7 +22,7 @@ export function passwordValidator(): ValidatorFn {
 
 // const criteriaStatus: PasswordCriteriaStatus = checkPasswordCriteria(value);
 
-// // Hard-coded strong min (calculated from @repo/shared/password-rules)
+// // Hard-coded strong min (calculated from @archboard/shared/password-rules)
 // if (score < 80) {
 //   return {
 //     score,

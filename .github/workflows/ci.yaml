@@ -1,31 +1,33 @@
 name: CI
 
 on:
+  workflow_call:
+    inputs:
+      run-tests:
+        required: false
+        type: boolean
+        default: false
   pull_request:
     branches:
       - main
       - 'v*'
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Monorepo Setup
+        id: monorepo-setup
+        uses: ./.github/actions/monorepo-setup
         with:
           node-version: '20'
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Install Dependencies
-        run: pnpm install
-
       - name: Run Tests
+        if: ${{ github.event_name == 'workflow_call' && inputs.run-tests == true || github.event_name == 'pull_request' }}
         run: pnpm test
 
-      - name: Build
-        run: pnpm build
+      - name: Lint
+        run: pnpm lint
