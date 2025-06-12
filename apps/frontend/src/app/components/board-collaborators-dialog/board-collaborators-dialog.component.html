@@ -1,3 +1,53 @@
+<p-table
+  [columns]="cols"
+  [value]="collaborators()"
+  [scrollable]="true"
+  scrollHeight="flex"
+  [rows]="3"
+  [lazy]="true"
+  [virtualScrollItemSize]="3"
+  (onLazyLoad)="loadCollaborators($event)"
+>
+  <ng-template #header let-columns>
+    <tr>
+      @for (col of columns; track $index) {
+        <th style="width: 80%">
+          {{ col.header }}
+        </th>
+      }
+      <th>Role</th>
+    </tr>
+  </ng-template>
+  <ng-template #body let-rowData let-columns="columns" let-rowIndex="rowIndex">
+    <tr style="height: 46px">
+      @for (col of columns; track $index) {
+        <td>
+          {{ rowData[col.field] }}
+        </td>
+      }
+      <td>
+        <p-select
+          [options]="roleOptions"
+          [fluid]="true"
+          [formControl]="rows.controls[rowIndex]"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select a Role"
+          appendTo="body"
+        />
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #loadingbody let-columns="columns">
+    <tr style="height: 46px">
+      @for (col of columns; track $index; let even = $even) {
+        <td>
+          <p-skeleton [style]="{ width: even ? (col.field === 'email' ? '30%' : '40%') : '60%' }" />
+        </td>
+      }
+    </tr>
+  </ng-template>
+</p-table>
 <form (ngSubmit)="handleCollaboratorAdd()" [formGroup]="addCollaboratorForm">
   <p-floatlabel variant="on" class="my-4">
     <label for="email">Collaborator Email</label>

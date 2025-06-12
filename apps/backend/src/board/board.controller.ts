@@ -88,13 +88,21 @@ export class BoardController {
 
   @Post(':id/collaborators')
   async addCollaborators(
+    @Req() request: Request,
     @Param('id') id: string,
     @Body() addcollaboratorDto: AddCollaboratorDto,
   ) {
-    // Service Handles Exceptions
+    const user = request.user as User;
     await this.boardService.addCollaborator(
       Number.parseInt(id),
+      user.UserId,
       addcollaboratorDto,
     );
+  }
+
+  @Get(':id/collaborators')
+  async getCollaborators(@Req() request: Request, @Param('id') id: string) {
+    const user = request.user as User;
+    return await this.boardService.getCollaborators(parseInt(id), user.UserId);
   }
 }

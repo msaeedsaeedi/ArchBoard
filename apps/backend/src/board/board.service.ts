@@ -1,15 +1,17 @@
 import {
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateBoardDto } from './dto/createBoard.dto';
 import { PrismaService } from 'src/prisma.service';
 import slugify from 'slugify';
-import { Board, Prisma } from 'generated/prisma';
+import { Board, CollaboratorRole, Prisma } from 'generated/prisma';
 import { GetBoardDto } from './dto/getBoard.dto';
 import { AddCollaboratorDto } from './dto/addCollaborator.dto';
+import { GetCollaboratorsDtoResponse as GetCollaboratorsResponseDto } from './dto/getCollaborators.dto';
 
 @Injectable()
 export class BoardService {
@@ -106,7 +108,11 @@ export class BoardService {
     });
   }
 
-  async addCollaborator(boardId: number, dto: AddCollaboratorDto) {
+  async addCollaborator(
+    boardId: number,
+    userId: number,
+    dto: AddCollaboratorDto,
+  ) {
     let collaboratorId: number | undefined = undefined;
 
     // Find Collaborator UserId
@@ -130,6 +136,7 @@ export class BoardService {
       await this.db.board.update({
         where: {
           Id: boardId,
+          OwnerId: userId,
         },
         data: {
           BoardCollaborators: {
@@ -146,6 +153,45 @@ export class BoardService {
         if (e.code === 'P2002') throw new ConflictException();
       }
       throw e;
+    }
+  }
+
+  async getCollaborators(
+    boardId: number,
+    userId: number,
+  ): Promise<GetCollaboratorsResponseDto[]> {
+    try {
+      const collaborators = await this.db.user.findMany({
+        where: {
+          BoardCollaborators: {
+            some: {
+              BoardId: boardId,
+              Board: {
+                OwnerId: userId,
+              },
+            },
+          },
+        },
+        select: {
+          Email: true,
+          BoardCollaborators: {
+            where: {
+              BoardId: boardId,
+            },
+            select: {
+              Role: true,
+            },
+          },
+        },
+      });
+
+      return collaborators.map((user) => ({
+        email: user.Email,
+        role: user.BoardCollaborators[0]?.Role ?? CollaboratorRole.VIEWER,
+      }));
+    } catch (e) {
+      console.error(e);
+      throw new InternalServerErrorException();
     }
   }
 }
