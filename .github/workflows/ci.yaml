@@ -13,26 +13,20 @@ on:
       - 'v*'
 
 jobs:
-  setup:
-    uses: ./.github/workflows/setup.yml
-    with:
-      node-version: '20'
-
-  build-and-test:
-    needs: setup
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js and pnpm
-        uses: ./.github/workflows/setup.yml
+      - name: Monorepo Setup
+        uses: ./.github/actions/monorepo-setup
         with:
           node-version: '20'
 
       - name: Run Tests
-        if: ${{ inputs.run-tests }}
+        if: github.event_name == 'workflow_call' && inputs.run-tests == true
         run: pnpm test
 
-      - name: Build
-        run: pnpm build
+      - name: Lint
+        run: pnpm lint

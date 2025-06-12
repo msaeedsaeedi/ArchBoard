@@ -15,29 +15,19 @@ on:
       - main
 
 jobs:
-  setup:
-    uses: ./.github/workflows/setup.yml
-    with:
-      node-version: '20'
-      fetch-depth: 0
-
-  version-and-tag:
-    needs: setup
+  release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout with full history
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js and pnpm
-        uses: ./.github/workflows/setup.yml
+      - name: Monorepo Setup
+        id: monorepo-setup
+        uses: ./.github/actions/monorepo-setup
         with:
           node-version: '20'
-          fetch-depth: 0
-
-      - name: Build
-        run: pnpm build
 
       - name: Version and Create PR
         id: changesets
@@ -50,7 +40,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Tag
-        if: ${{ inputs.create-tag && steps.changesets.outputs.hasChangesets == 'true' }}
+        if: >
+          ${{
+            (github.event_name == 'workflow_call' && inputs.create-tag == true) ||
+            (github.event_name == 'push')
+          }} && steps.changesets.outputs.hasChangesets == 'true'
         run: |
           VERSION=$(node -p "require('./package.json').version")
           git tag v$VERSION
