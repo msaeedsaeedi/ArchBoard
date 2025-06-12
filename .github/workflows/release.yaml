@@ -27,6 +27,12 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - name: Run Tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
       - name: Version and Create PR
         uses: changesets/action@v1
         with:
