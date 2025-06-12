@@ -8,7 +8,7 @@ import {
 import { CreateBoardDto } from './dto/createBoard.dto';
 import { PrismaService } from 'src/prisma.service';
 import slugify from 'slugify';
-import { Board, Prisma } from 'generated/prisma';
+import { Board, CollaboratorRole, Prisma } from 'generated/prisma';
 import { GetBoardDto } from './dto/getBoard.dto';
 import { AddCollaboratorDto } from './dto/addCollaborator.dto';
 import { GetCollaboratorsDtoResponse as GetCollaboratorsResponseDto } from './dto/getCollaborators.dto';
@@ -161,22 +161,34 @@ export class BoardService {
     userId: number,
   ): Promise<GetCollaboratorsResponseDto[]> {
     try {
-      const data = await this.db.user.findMany({
+      const collaborators = await this.db.user.findMany({
         where: {
           BoardCollaborators: {
             some: {
+              BoardId: boardId,
               Board: {
-                Id: boardId,
                 OwnerId: userId,
               },
             },
           },
         },
+        select: {
+          Email: true,
+          BoardCollaborators: {
+            where: {
+              BoardId: boardId,
+            },
+            select: {
+              Role: true,
+            },
+          },
+        },
       });
 
-      return data.map((user) => {
-        return { email: user.Email };
-      });
+      return collaborators.map((user) => ({
+        email: user.Email,
+        role: user.BoardCollaborators[0]?.Role ?? CollaboratorRole.VIEWER,
+      }));
     } catch (e) {
       console.error(e);
       throw new InternalServerErrorException();
