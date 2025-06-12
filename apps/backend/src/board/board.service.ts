@@ -106,7 +106,11 @@ export class BoardService {
     });
   }
 
-  async addCollaborator(boardId: number, dto: AddCollaboratorDto) {
+  async addCollaborator(
+    boardId: number,
+    userId: number,
+    dto: AddCollaboratorDto,
+  ) {
     let collaboratorId: number | undefined = undefined;
 
     // Find Collaborator UserId
@@ -130,6 +134,7 @@ export class BoardService {
       await this.db.board.update({
         where: {
           Id: boardId,
+          OwnerId: userId,
         },
         data: {
           BoardCollaborators: {
