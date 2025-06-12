@@ -1,7 +1,7 @@
 {
-  "name": "turborepo-template",
+  "name": "archboard",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.1.0",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@angular/cli": "^19.2.12",
+    "@changesets/cli": "^2.29.4",
     "cross-env": "^7.0.3",
     "prettier": "^3.5.3",
     "turbo": "^2.5.3"
