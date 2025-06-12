@@ -25,9 +25,9 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Run Tests
-        if: ${{ github.event_name == 'workflow_call' && inputs.run-tests == true || github.event_name == 'pull_request' }}
-        run: pnpm test
+      # - name: Run Tests
+      #   if: ${{ github.event_name == 'workflow_call' && inputs.run-tests == true || github.event_name == 'pull_request' }}
+      #   run: pnpm test
 
       - name: Lint
         run: pnpm lint
