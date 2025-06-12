@@ -85,12 +85,13 @@ export class BoardCollaboratorsDialogComponent {
         if (event.forceUpdate) event.forceUpdate();
 
         // Add role value subscription
+        this.rows.clear();
         value.forEach((row) => {
           const rowControl = this.formBuilder.control(row.role) as FormControl;
           this.rows.push(rowControl);
 
-          rowControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
-            console.log('Updating: ', row.email, value); // CALL API HERE
+          rowControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            // TODO Call API HERE
           });
         });
       },
