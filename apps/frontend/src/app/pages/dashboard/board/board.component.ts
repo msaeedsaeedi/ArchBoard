@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 
 @Component({
   selector: 'app-board',
@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './board.component.css'
 })
 export class BoardComponent {
-
+  tmp = signal<string>('Hello World');
 }
