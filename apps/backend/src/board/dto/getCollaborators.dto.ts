@@ -1,6 +1,6 @@
-import { IsString } from 'class-validator';
+import { IsArray } from 'class-validator';
 
-export class GetCollaboratorsDto {
-  @IsString()
+export class GetCollaboratorsDtoResponse {
+  @IsArray()
   email: string;
 }

@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -10,6 +11,7 @@ import slugify from 'slugify';
 import { Board, Prisma } from 'generated/prisma';
 import { GetBoardDto } from './dto/getBoard.dto';
 import { AddCollaboratorDto } from './dto/addCollaborator.dto';
+import { GetCollaboratorsDtoResponse as GetCollaboratorsResponseDto } from './dto/getCollaborators.dto';
 
 @Injectable()
 export class BoardService {
@@ -151,6 +153,33 @@ export class BoardService {
         if (e.code === 'P2002') throw new ConflictException();
       }
       throw e;
+    }
+  }
+
+  async getCollaborators(
+    boardId: number,
+    userId: number,
+  ): Promise<GetCollaboratorsResponseDto[]> {
+    try {
+      const data = await this.db.user.findMany({
+        where: {
+          BoardCollaborators: {
+            some: {
+              Board: {
+                Id: boardId,
+                OwnerId: userId,
+              },
+            },
+          },
+        },
+      });
+
+      return data.map((user) => {
+        return { email: user.Email };
+      });
+    } catch (e) {
+      console.error(e);
+      throw new InternalServerErrorException();
     }
   }
 }

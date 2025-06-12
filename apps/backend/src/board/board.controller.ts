@@ -99,4 +99,10 @@ export class BoardController {
       addcollaboratorDto,
     );
   }
+
+  @Get(':id/collaborators')
+  async getCollaborators(@Req() request: Request, @Param('id') id: string) {
+    const user = request.user as User;
+    return await this.boardService.getCollaborators(parseInt(id), user.UserId);
+  }
 }
