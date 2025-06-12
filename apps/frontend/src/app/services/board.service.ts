@@ -3,6 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Board } from '../types/board';
+import { Collaborator } from '../types/collaborator';
+import { CollaboratorRole } from '../enums/CollaboratorRole';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +18,18 @@ export class BoardService {
         return throwError(() => new Error('Something went wrong. Please try again later'));
       }),
     );
+  }
+
+  getCollaborators(boardId: number): Observable<Collaborator[]> {
+    return this.http
+      .get<Collaborator[]>(`${environment.apiUrl}/board/${boardId}/collaborators`, {
+        withCredentials: true,
+      })
+      .pipe(
+        catchError(() => {
+          return throwError(() => new Error('Something went wrong. Please try again later'));
+        }),
+      );
   }
 
   update(id: number, title: string, description?: string): Observable<boolean> {
@@ -60,7 +74,11 @@ export class BoardService {
       );
   }
 
-  addCollaborator(boardId: number, collaboratorEmail: string, role: string): Observable<boolean> {
+  addCollaborator(
+    boardId: number,
+    collaboratorEmail: string,
+    role: CollaboratorRole,
+  ): Observable<boolean> {
     return this.http
       .post(
         `${environment.apiUrl}/board/${boardId}/collaborators`,
