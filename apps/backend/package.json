@@ -1,8 +1,5 @@
 {
   "name": "@archboard/backend",
-  "version": "0.1.0",
-  "description": "",
-  "author": "",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
