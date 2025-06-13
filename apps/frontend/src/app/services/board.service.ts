@@ -101,4 +101,18 @@ export class BoardService {
         }),
       );
   }
+
+  removeCollaborator(boardId: number, collaboratorEmail: string): Observable<boolean> {
+    return this.http
+      .delete(`${environment.apiUrl}/board/${boardId}/collaborator`, {
+        body: { email: collaboratorEmail },
+        withCredentials: true,
+      })
+      .pipe(
+        map(() => true),
+        catchError(() =>
+          throwError(() => new Error('Failed to remove collaborator. Please try again later')),
+        ),
+      );
+  }
 }
