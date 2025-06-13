@@ -1,49 +1,31 @@
 name: Release
 
 on:
-  workflow_call:
-    inputs:
-      create-tag:
-        required: false
-        type: boolean
-        default: true
   push:
     branches:
       - main
 
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
   release:
+    name: Release
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout with full history
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Monorepo Setup
-        id: monorepo-setup
-        uses: ./.github/actions/monorepo-setup
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup
         with:
           node-version: '20'
 
-      - name: Version and Create PR
-        id: changesets
+      - name: Create Release Pull Request or Publish
         uses: changesets/action@v1
+        id: changesets
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with:
-          version: pnpm changeset version
-          commit: 'chore: release version'
-          title: 'Release version'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Tag
-        if: >
-          steps.changesets.outputs.hasChangesets == 'true' && 
-          ((github.event_name == 'workflow_call' && inputs.create-tag == true) ||
-          github.event_name == 'push')
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          git tag v$VERSION
-          git push origin v$VERSION
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          publish: pnpm changeset publish
