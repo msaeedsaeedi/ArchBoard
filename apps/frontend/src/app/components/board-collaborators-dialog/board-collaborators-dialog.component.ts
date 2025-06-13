@@ -14,7 +14,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { BoardService } from '../../services/board.service';
 import { finalize } from 'rxjs';
 import { ToastService } from '../../services/toast.service';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Collaborator } from '../../types/collaborator';
@@ -49,7 +48,6 @@ export class BoardCollaboratorsDialogComponent {
 
   boardService = inject(BoardService);
   toast = inject(ToastService);
-  ref = inject(DynamicDialogRef);
   destroyRef = inject(DestroyRef);
   titleCasePipe = inject(TitleCasePipe);
   formBuilder = inject(FormBuilder);
@@ -78,6 +76,15 @@ export class BoardCollaboratorsDialogComponent {
     }),
   });
 
+  private addCollaboratorRoleControl(collaborator: Collaborator) {
+    const rowControl = this.formBuilder.control(collaborator.role) as FormControl;
+    this.rows.push(rowControl);
+
+    rowControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      // TODO Call API HERE
+    });
+  }
+
   loadCollaborators(event: TableLazyLoadEvent) {
     this.boardService.getCollaborators(this.id()).subscribe({
       next: (value) => {
@@ -87,12 +94,7 @@ export class BoardCollaboratorsDialogComponent {
         // Add role value subscription
         this.rows.clear();
         value.forEach((row) => {
-          const rowControl = this.formBuilder.control(row.role) as FormControl;
-          this.rows.push(rowControl);
-
-          rowControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            // TODO Call API HERE
-          });
+          this.addCollaboratorRoleControl(row);
         });
       },
       error: (e: Error) => {
@@ -112,14 +114,35 @@ export class BoardCollaboratorsDialogComponent {
       .pipe(finalize(() => this.addCollaboratorLoading.set(false)))
       .subscribe({
         next: () => {
+          const collaborator = { email: collaboratorEmail, role: collaboratorRole };
+          this.collaborators.update((prev) => [...prev, collaborator]);
+          this.addCollaboratorRoleControl(collaborator);
+
           this.toast.success(
             'Board Collaborators',
             `Successfully Added ${collaboratorEmail} as Board Collaborator`,
           );
-          this.ref.close();
         },
         error: (error: Error) => {
           this.toast.error('Error', error.message);
+        },
+      });
+  }
+
+  handleCollaboratorRemove(collaboratorEmail: string) {
+    this.boardService
+      .removeCollaborator(this.id(), collaboratorEmail)
+      .pipe()
+      .subscribe({
+        next: () => {
+          this.collaborators.update((pre) => pre.filter((val) => val.email !== collaboratorEmail));
+          this.toast.success(
+            'Success',
+            `Successfully Removed ${collaboratorEmail} from collaborators`,
+          );
+        },
+        error: (e: Error) => {
+          this.toast.error('Error', e.message);
         },
       });
   }
