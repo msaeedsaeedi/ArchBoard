@@ -1,5 +1,5 @@
-name: 'Monorepo Setup'
-description: 'Setup Node, pnpm, install dependencies, and restore turbo cache.'
+name: Setup
+description: 'Setup Node, pnpm, install dependencies, and build.'
 runs:
   using: 'composite'
   steps:
@@ -13,11 +13,7 @@ runs:
     - name: Install Dependencies
       run: pnpm install
       shell: bash
-
-    - name: Build
-      run: pnpm build
-      shell: bash
-
+      
 inputs:
   node-version:
     description: 'Node.js version'
