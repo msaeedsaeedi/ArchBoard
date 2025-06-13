@@ -12,7 +12,6 @@ import { Board, CollaboratorRole, Prisma } from 'generated/prisma';
 import { GetBoardDto } from './dto/getBoard.dto';
 import { AddCollaboratorDto } from './dto/addCollaborator.dto';
 import { GetCollaboratorsDtoResponse as GetCollaboratorsResponseDto } from './dto/getCollaborators.dto';
-import { DeleteCollaboratorDto } from './dto/deleteCollaborator.dto';
 
 @Injectable()
 export class BoardService {
@@ -152,50 +151,6 @@ export class BoardService {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         if (e.code === 'P2025') throw new UnauthorizedException();
         if (e.code === 'P2002') throw new ConflictException();
-      }
-      throw e;
-    }
-  }
-
-  async removeCollaborator(
-    boardId: number,
-    ownerId: number,
-    deleteCollaboratorDto: DeleteCollaboratorDto,
-  ) {
-    // Find collaboratorId with Email
-    let collaboratorId: number;
-    try {
-      collaboratorId = (
-        await this.db.user.findFirstOrThrow({
-          where: {
-            Email: deleteCollaboratorDto.email,
-          },
-        })
-      ).UserId;
-    } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          throw new NotFoundException();
-        }
-      }
-      throw e;
-    }
-
-    try {
-      await this.db.boardCollaborators.delete({
-        where: {
-          Board: {
-            OwnerId: ownerId,
-          },
-          BoardId_UserId: {
-            UserId: collaboratorId,
-            BoardId: boardId,
-          },
-        },
-      });
-    } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') return new NotFoundException();
       }
       throw e;
     }

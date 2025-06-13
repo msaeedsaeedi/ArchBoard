@@ -20,7 +20,6 @@ import { Prisma, User } from 'generated/prisma';
 import { GetBoardDto } from './dto/getBoard.dto';
 import { UpdateBoardDto } from './dto/updateBoard.dto';
 import { AddCollaboratorDto } from './dto/addCollaborator.dto';
-import { DeleteCollaboratorDto } from './dto/deleteCollaborator.dto';
 
 @Controller('board')
 export class BoardController {
@@ -105,19 +104,5 @@ export class BoardController {
   async getCollaborators(@Req() request: Request, @Param('id') id: string) {
     const user = request.user as User;
     return await this.boardService.getCollaborators(parseInt(id), user.UserId);
-  }
-
-  @Delete(':id/collaborator')
-  async removeCollaborator(
-    @Req() request: Request,
-    @Param('id') id: string,
-    @Body() deleteCollaboratorDto: DeleteCollaboratorDto,
-  ) {
-    const user = request.user as User;
-    await this.boardService.removeCollaborator(
-      parseInt(id),
-      user.UserId,
-      deleteCollaboratorDto,
-    );
   }
 }
