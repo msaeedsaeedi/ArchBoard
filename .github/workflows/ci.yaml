@@ -1,12 +1,6 @@
 name: CI
 
 on:
-  workflow_call:
-    inputs:
-      run-tests:
-        required: false
-        type: boolean
-        default: false
   pull_request:
     branches:
       - main
@@ -20,8 +14,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Monorepo Setup
-        id: monorepo-setup
-        uses: ./.github/actions/monorepo-setup
+        id: setup
+        uses: ./.github/actions/setup
         with:
           node-version: '20'
 
