@@ -8,7 +8,7 @@ import { providePrimeNG } from 'primeng/config';
 import Nora from '@primeng/themes/nora';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
-import { ToastService } from './services/toast.service';
+import { ToastService } from '@services/toast.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [

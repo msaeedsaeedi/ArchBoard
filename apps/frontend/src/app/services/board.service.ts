@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '@environment';
 import { Board } from '../types/board';
 import { Collaborator } from '../types/collaborator';
 import { CollaboratorRole } from '../enums/CollaboratorRole';
