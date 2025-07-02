@@ -17,7 +17,7 @@
     "typescript": "latest"
   },
   "dependencies": {
-    "@types/validator": "^13.15.1",
+    "@types/validator": "^13.15.2",
     "validator": "^13.15.15"
   }
 }
