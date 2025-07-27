@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
-import { AuthService } from '../../services/auth.service';
-import { ToastService } from '../../services/toast.service';
-import { environment } from '../../../environments/environment';
-import { matchValidator } from '../../utils/match.validator';
+import { AuthService } from '@services/auth.service';
+import { ToastService } from '@services/toast.service';
+import { environment } from '@environment';
+import { matchValidator } from '@utils/match.validator';
 import { finalize } from 'rxjs';
-import { passwordValidator } from '../../utils/password.validator';
+import { passwordValidator } from '@utils/password.validator';
 import { PasswordModule } from 'primeng/password';
 import { DividerModule } from 'primeng/divider';
 

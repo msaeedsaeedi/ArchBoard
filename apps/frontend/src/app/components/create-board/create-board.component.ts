@@ -6,7 +6,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { Router } from '@angular/router';
-import { ToastService } from '../../services/toast.service';
+import { ToastService } from '@services/toast.service';
 
 @Component({
   selector: 'app-create-board',
@@ -36,7 +36,7 @@ export class CreateBoardComponent {
   });
 
   async createBoard() {
-    const BoardServiceModule = await import('../../services/board.service');
+    const BoardServiceModule = await import('@services/board.service');
     const boardService = this.injector.get(BoardServiceModule.BoardService);
     
     boardService

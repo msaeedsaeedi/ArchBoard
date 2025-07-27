@@ -7,10 +7,10 @@ import { Validators } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { ToastService } from '../../services/toast.service';
+import { AuthService } from '@services/auth.service';
+import { ToastService } from '@services/toast.service';
 import { finalize } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment';
 
 @Component({
   selector: 'app-login',

@@ -11,14 +11,14 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
-import { BoardService } from '../../services/board.service';
+import { BoardService } from '@services/board.service';
 import { finalize } from 'rxjs';
-import { ToastService } from '../../services/toast.service';
+import { ToastService } from '@services/toast.service';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
-import { Collaborator } from '../../types/collaborator';
+import { Collaborator } from '@app-types/collaborator';
 import { SkeletonModule } from 'primeng/skeleton';
-import { CollaboratorRole } from '../../enums/CollaboratorRole';
+import { CollaboratorRole } from '@enums/CollaboratorRole';
 import { TitleCasePipe } from '@angular/common';
 import { SelectModule } from 'primeng/select';
 

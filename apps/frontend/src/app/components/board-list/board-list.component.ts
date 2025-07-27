@@ -1,10 +1,10 @@
 import { Component, inject, OnInit, signal, input, computed, Injector } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
-import { BoardService } from '../../services/board.service';
-import { Board } from '../../types/board';
+import { BoardService } from '@services/board.service';
+import { Board } from '@app-types/board';
 import { delay, finalize } from 'rxjs';
-import { ToastService } from '../../services/toast.service';
+import { ToastService } from '@services/toast.service';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmationService } from 'primeng/api';
