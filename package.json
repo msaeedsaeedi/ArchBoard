@@ -21,15 +21,15 @@
     "docker:prune": "docker system prune -a -f --volumes"
   },
   "devDependencies": {
-    "@angular/cli": "^20.0.5",
+    "@angular/cli": "^20.1.3",
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.5",
-    "cross-env": "^7.0.3",
+    "cross-env": "^10.0.0",
     "prettier": "^3.6.2",
-    "turbo": "^2.5.4"
+    "turbo": "^2.5.5"
   },
-  "packageManager": "pnpm@10.12.4",
+  "packageManager": "pnpm@10.13.1",
   "dependencies": {
-    "npm-check-updates": "^18.0.1"
+    "npm-check-updates": "^18.0.2"
   }
 }
