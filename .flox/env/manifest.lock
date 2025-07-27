@@ -1,0 +1,266 @@
+{
+  "lockfile-version": 1,
+  "manifest": {
+    "version": 1,
+    "install": {
+      "nodejs": {
+        "pkg-path": "nodejs"
+      },
+      "pnpm_10": {
+        "pkg-path": "pnpm_10"
+      }
+    },
+    "hook": {},
+    "profile": {},
+    "options": {
+      "systems": [
+        "aarch64-darwin",
+        "aarch64-linux",
+        "x86_64-darwin",
+        "x86_64-linux"
+      ]
+    }
+  },
+  "packages": [
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/vw8bgqlyqqkrqkj3zi87g5dn3f9gdbig-nodejs-22.17.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "name": "nodejs-22.17.0",
+      "pname": "nodejs",
+      "rev": "7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "rev_count": 834672,
+      "rev_date": "2025-07-25T07:48:04Z",
+      "scrape_date": "2025-07-27T00:28:24.282717Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.17.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/13sy62qad5p8lhbak7lqmh5dhjakqlkd-nodejs-22.17.0-dev",
+        "libv8": "/nix/store/lavkp68zvwgbs3z6zzl31q6yzbi2hkwh-nodejs-22.17.0-libv8",
+        "out": "/nix/store/gaq6v57mm40g1974hyg1vvxgzxqh16af-nodejs-22.17.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/rk2qfvqapnzc8jd2y0qrk5ifs5b1vl0v-nodejs-22.17.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "name": "nodejs-22.17.0",
+      "pname": "nodejs",
+      "rev": "7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "rev_count": 834672,
+      "rev_date": "2025-07-25T07:48:04Z",
+      "scrape_date": "2025-07-27T00:48:21.289872Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.17.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/gv6ydjf9r179ih2npybkzxrnf6wzq77l-nodejs-22.17.0-dev",
+        "libv8": "/nix/store/zlb0n44z62k16c41xvx9yci5010jbqvc-nodejs-22.17.0-libv8",
+        "out": "/nix/store/ywi3gcwj1cjbzb9l0ixqn438z52i3qiw-nodejs-22.17.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/p5byay4vjnbbf91b6fl7bl6ch3zn417g-nodejs-22.17.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "name": "nodejs-22.17.0",
+      "pname": "nodejs",
+      "rev": "7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "rev_count": 834672,
+      "rev_date": "2025-07-25T07:48:04Z",
+      "scrape_date": "2025-07-27T01:06:57.655196Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.17.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/8m3dnkmhcfvx1y11nqxaah29siwrn5a3-nodejs-22.17.0-dev",
+        "libv8": "/nix/store/hn6z4a6bz6m1v8852yrw51pwv4pf73xk-nodejs-22.17.0-libv8",
+        "out": "/nix/store/4w47135rza25rjmfq247x63qlm92v4j1-nodejs-22.17.0"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/2c2yfdvdf58hhpq7363wdp039276d40m-nodejs-22.17.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "name": "nodejs-22.17.0",
+      "pname": "nodejs",
+      "rev": "7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "rev_count": 834672,
+      "rev_date": "2025-07-25T07:48:04Z",
+      "scrape_date": "2025-07-27T01:29:05.435677Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "22.17.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "dev": "/nix/store/gwsbdl02aszapvyykb2kcyqx71q2mj6n-nodejs-22.17.0-dev",
+        "libv8": "/nix/store/2cxsn91qbd148jsz8jjbfzq41qbl9q8j-nodejs-22.17.0-libv8",
+        "out": "/nix/store/r1smm331j6crqs02mn986g06f7cpbggh-nodejs-22.17.0"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "pnpm_10",
+      "broken": false,
+      "derivation": "/nix/store/0kp0j65lzrz7slqc8q1hyh3c5c77i8zr-pnpm-10.13.1.drv",
+      "description": "Fast, disk space efficient package manager for JavaScript",
+      "install_id": "pnpm_10",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "name": "pnpm-10.13.1",
+      "pname": "pnpm_10",
+      "rev": "7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "rev_count": 834672,
+      "rev_date": "2025-07-25T07:48:04Z",
+      "scrape_date": "2025-07-27T00:28:29.667671Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "10.13.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/wqa2kn4a7ni8y9p293j6xwlr0111jha0-pnpm-10.13.1"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "pnpm_10",
+      "broken": false,
+      "derivation": "/nix/store/a9p6bfff3fzhq0fs8kypi4h3c81wblhi-pnpm-10.13.1.drv",
+      "description": "Fast, disk space efficient package manager for JavaScript",
+      "install_id": "pnpm_10",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "name": "pnpm-10.13.1",
+      "pname": "pnpm_10",
+      "rev": "7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "rev_count": 834672,
+      "rev_date": "2025-07-25T07:48:04Z",
+      "scrape_date": "2025-07-27T00:48:31.233747Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "10.13.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/91nil2hyw90n1yxkr9myd70kxb3cvadc-pnpm-10.13.1"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "pnpm_10",
+      "broken": false,
+      "derivation": "/nix/store/hpz6gxiwr5ahglymb0wq42k9wk7gf83j-pnpm-10.13.1.drv",
+      "description": "Fast, disk space efficient package manager for JavaScript",
+      "install_id": "pnpm_10",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "name": "pnpm-10.13.1",
+      "pname": "pnpm_10",
+      "rev": "7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "rev_count": 834672,
+      "rev_date": "2025-07-25T07:48:04Z",
+      "scrape_date": "2025-07-27T01:07:03.087038Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "10.13.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/ljac08bdv87gy7jj5j2dkxgbzy93bjc1-pnpm-10.13.1"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "pnpm_10",
+      "broken": false,
+      "derivation": "/nix/store/bs0674xgzvv0p245w6rhcg5i3h3srq3k-pnpm-10.13.1.drv",
+      "description": "Fast, disk space efficient package manager for JavaScript",
+      "install_id": "pnpm_10",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "name": "pnpm-10.13.1",
+      "pname": "pnpm_10",
+      "rev": "7fd36ee82c0275fb545775cc5e4d30542899511d",
+      "rev_count": 834672,
+      "rev_date": "2025-07-25T07:48:04Z",
+      "scrape_date": "2025-07-27T01:29:16.484226Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "10.13.1",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/cdm1ypkmixsyvzj42p8has6j7884z6gv-pnpm-10.13.1"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    }
+  ]
+}
