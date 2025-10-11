@@ -5,5 +5,5 @@ interface Environment {
 
 export const environment: Environment = {
   production: process.env.NODE_ENV === "production",
-  apiUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
+  apiUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3002",
 };

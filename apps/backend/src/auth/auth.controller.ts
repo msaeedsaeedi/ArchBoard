@@ -30,6 +30,20 @@ export class AuthController {
   ) {}
 
   @Public()
+  @Get('me')
+  @HttpCode(HttpStatus.OK)
+  me(
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    return response.json({
+      id: 1,
+      email: 'test@user.com',
+      FullName: "saeed"
+    })
+  }
+
+
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
