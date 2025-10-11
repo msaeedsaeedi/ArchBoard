@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,10 +16,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { useAuthStore } from "@/lib/store/auth.store";
 import { toastService } from "@/lib/services/toast.service";
-import { loginSchema, type LoginFormData } from "@/lib/validations/schemas";
+import { useAuthStore } from "@/lib/store/auth.store";
 import { cn } from "@/lib/utils";
+import { type LoginFormData, loginSchema } from "@/lib/validations/schemas";
 
 export function LoginForm({
   className,

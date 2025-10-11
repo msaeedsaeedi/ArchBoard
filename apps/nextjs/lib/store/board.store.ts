@@ -54,38 +54,26 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
   },
 
   createBoard: async (data: BoardFormData) => {
-    try {
-      const slug = await boardService.createBoard(data);
-      // Refresh boards list
-      await get().fetchBoards();
-      return slug;
-    } catch (error) {
-      throw error;
-    }
+    const slug = await boardService.createBoard(data);
+    // Refresh boards list
+    await get().fetchBoards();
+    return slug;
   },
 
   updateBoard: async (id: number, data: BoardFormData) => {
-    try {
-      await boardService.updateBoard(id, data);
-      // Update the board in local state
-      const boards = get().boards.map((board) =>
-        board.id === id ? { ...board, ...data } : board,
-      );
-      set({ boards });
-    } catch (error) {
-      throw error;
-    }
+    await boardService.updateBoard(id, data);
+    // Update the board in local state
+    const boards = get().boards.map((board) =>
+      board.id === id ? { ...board, ...data } : board,
+    );
+    set({ boards });
   },
 
   deleteBoard: async (id: number) => {
-    try {
-      await boardService.deleteBoard(id);
-      // Remove board from local state
-      const boards = get().boards.filter((board) => board.id !== id);
-      set({ boards });
-    } catch (error) {
-      throw error;
-    }
+    await boardService.deleteBoard(id);
+    // Remove board from local state
+    const boards = get().boards.filter((board) => board.id !== id);
+    set({ boards });
   },
 
   setSearchTerm: (searchTerm: string) => {
@@ -112,26 +100,18 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
     email: string,
     role: CollaboratorRole,
   ) => {
-    try {
-      await boardService.addCollaborator(boardId, email, role);
-      // Refresh collaborators list
-      await get().fetchCollaborators(boardId);
-    } catch (error) {
-      throw error;
-    }
+    await boardService.addCollaborator(boardId, email, role);
+    // Refresh collaborators list
+    await get().fetchCollaborators(boardId);
   },
 
   removeCollaborator: async (boardId: number, email: string) => {
-    try {
-      await boardService.removeCollaborator(boardId, email);
-      // Remove collaborator from local state
-      const collaborators = get().collaborators.filter(
-        (collab) => collab.email !== email,
-      );
-      set({ collaborators });
-    } catch (error) {
-      throw error;
-    }
+    await boardService.removeCollaborator(boardId, email);
+    // Remove collaborator from local state
+    const collaborators = get().collaborators.filter(
+      (collab) => collab.email !== email,
+    );
+    set({ collaborators });
   },
 
   getFilteredBoards: () => {

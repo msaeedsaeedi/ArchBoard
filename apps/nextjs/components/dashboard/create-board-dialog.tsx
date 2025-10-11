@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -22,10 +23,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { useBoardStore } from "@/lib/store/board.store";
 import { toastService } from "@/lib/services/toast.service";
-import { boardSchema, type BoardFormData } from "@/lib/validations/schemas";
+import { useBoardStore } from "@/lib/store/board.store";
+import { type BoardFormData, boardSchema } from "@/lib/validations/schemas";
 
 interface CreateBoardDialogProps {
   open: boolean;

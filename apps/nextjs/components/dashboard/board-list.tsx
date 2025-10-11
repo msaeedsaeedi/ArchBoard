@@ -1,8 +1,9 @@
 "use client";
 
+import { Edit, Eye, MoreHorizontal, Trash2, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { MoreHorizontal, Edit, Trash2, Users, Eye } from "lucide-react";
-import { useBoardStore } from "@/lib/store/board.store";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,15 +12,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useBoardStore } from "@/lib/store/board.store";
 import type { Board } from "@/lib/types";
 
 export function BoardList() {
@@ -50,7 +50,7 @@ export function BoardList() {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {Array.from({ length: 8 }).map((_, i) => (
-          <Card key={`skeleton-${i}`} className="h-48">
+          <Card key={`skeleton-${i + 1}`} className="h-48">
             <CardHeader>
               <Skeleton className="h-6 w-3/4" />
               <Skeleton className="h-4 w-full" />

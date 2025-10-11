@@ -1,7 +1,7 @@
 "use client";
 
+import { ArrowLeft, MoreHorizontal, Settings, Users } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Settings, Users, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthGuard } from "@/lib/hooks/auth.hooks";
 

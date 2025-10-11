@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Search, Plus, LogOut, Moon, Sun } from "lucide-react";
+import { LogOut, Moon, Plus, Search, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { BoardList } from "@/components/dashboard/board-list";
+import { CreateBoardDialog } from "@/components/dashboard/create-board-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthGuard } from "@/lib/hooks/auth.hooks";
+import { toastService } from "@/lib/services/toast.service";
 import { useAuthStore } from "@/lib/store/auth.store";
 import { useBoardStore } from "@/lib/store/board.store";
-import { toastService } from "@/lib/services/toast.service";
-import { BoardList } from "@/components/dashboard/board-list";
-import { CreateBoardDialog } from "@/components/dashboard/create-board-dialog";
 
 export default function DashboardPage() {
   const { isAuthenticated, isInitialized } = useAuthGuard();
