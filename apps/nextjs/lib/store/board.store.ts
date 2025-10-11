@@ -14,6 +14,7 @@ interface BoardState {
 
 interface BoardActions {
   fetchBoards: () => Promise<void>;
+  refreshBoards: () => Promise<void>;
   createBoard: (data: BoardFormData) => Promise<string>;
   updateBoard: (id: number, data: BoardFormData) => Promise<void>;
   deleteBoard: (id: number) => Promise<void>;
@@ -43,6 +44,23 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
 
   // Actions
   fetchBoards: async () => {
+    const currentState = get();
+    // Don't refetch if we already have boards and not explicitly requesting refresh
+    if (currentState.boards.length > 0 && !currentState.isLoading) {
+      return;
+    }
+    
+    set({ isLoading: true });
+    try {
+      const boards = await boardService.getBoards();
+      set({ boards, isLoading: false });
+    } catch (error) {
+      set({ isLoading: false });
+      throw error;
+    }
+  },
+
+  refreshBoards: async () => {
     set({ isLoading: true });
     try {
       const boards = await boardService.getBoards();
@@ -56,7 +74,7 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
   createBoard: async (data: BoardFormData) => {
     const slug = await boardService.createBoard(data);
     // Refresh boards list
-    await get().fetchBoards();
+    await get().refreshBoards();
     return slug;
   },
 

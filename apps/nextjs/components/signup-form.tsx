@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -94,10 +93,6 @@ export function SignupForm({
                 <FormControl>
                   <Input type="email" placeholder="m@example.com" {...field} />
                 </FormControl>
-                <FormDescription>
-                  We&apos;ll use this to contact you. We will not share your
-                  email with anyone else.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -112,10 +107,6 @@ export function SignupForm({
                 <FormControl>
                   <Input type="password" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Must be at least 8 characters long with uppercase, lowercase,
-                  and number.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -130,7 +121,6 @@ export function SignupForm({
                 <FormControl>
                   <Input type="password" {...field} />
                 </FormControl>
-                <FormDescription>Please confirm your password.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
