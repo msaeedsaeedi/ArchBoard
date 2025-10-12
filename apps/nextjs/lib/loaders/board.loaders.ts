@@ -1,6 +1,6 @@
-import type { DataLoader } from "../types/loader.types";
-import type { Board } from "../types";
 import { boardService } from "../services/board.service";
+import type { Board } from "../types";
+import type { DataLoader } from "../types/loader.types";
 
 export const boardsLoader: DataLoader<Board[]> = {
   loadingKey: "boards",

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import { useAuthStore } from "../store/auth.store";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLoading } from "../contexts/loading.context";
+import { useAuthStore } from "../store/auth.store";
 import type { DataLoader, LoaderResult } from "../types/loader.types";
 
 export function useDataLoader<T>(
@@ -10,12 +10,17 @@ export function useDataLoader<T>(
     autoLoad?: boolean;
     onError?: (error: Error) => void;
     minLoadingDelay?: number;
-  } = {}
+  } = {},
 ): LoaderResult<T> {
-  const { requireAuth = true, autoLoad = true, onError, minLoadingDelay = 300 } = options;
+  const {
+    requireAuth = true,
+    autoLoad = true,
+    onError,
+    minLoadingDelay = 300,
+  } = options;
   const { isAuthenticated, isInitialized } = useAuthStore();
   const { setLoading } = useLoading();
-  
+
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const hasLoadedRef = useRef(false);
@@ -36,24 +41,29 @@ export function useDataLoader<T>(
 
     // Start both the data loading and minimum delay timer
     const startTime = Date.now();
-    
+
     try {
       console.log(`[useDataLoader] Loading ${loader.loadingKey}...`);
       const result = await loader.load();
-      
+
       // Ensure minimum loading time to prevent blinking
       const elapsedTime = Date.now() - startTime;
       if (elapsedTime < minLoadingDelay) {
-        await new Promise(resolve => setTimeout(resolve, minLoadingDelay - elapsedTime));
+        await new Promise((resolve) =>
+          setTimeout(resolve, minLoadingDelay - elapsedTime),
+        );
       }
-      
+
       setData(result);
       hasLoadedRef.current = true;
       console.log(`[useDataLoader] Successfully loaded ${loader.loadingKey}`);
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
       setError(error);
-      console.error(`[useDataLoader] Failed to load ${loader.loadingKey}:`, error);
+      console.error(
+        `[useDataLoader] Failed to load ${loader.loadingKey}:`,
+        error,
+      );
       onError?.(error);
     } finally {
       isLoadingRef.current = false;

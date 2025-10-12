@@ -16,7 +16,7 @@ export function useBoardsLoader() {
       onError: (error) => {
         console.error("[useBoardsLoader] Failed to load boards:", error);
       },
-    }
+    },
   );
 
   return {

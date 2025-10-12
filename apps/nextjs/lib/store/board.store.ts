@@ -49,7 +49,7 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
     if (currentState.boards.length > 0 && !currentState.isLoading) {
       return;
     }
-    
+
     set({ isLoading: true });
     try {
       const boards = await boardService.getBoards();

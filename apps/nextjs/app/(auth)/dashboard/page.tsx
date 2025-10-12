@@ -13,110 +13,110 @@ import { useAuthStore } from "@/lib/store/auth.store";
 import { useBoardStore } from "@/lib/store/board.store";
 
 export default function DashboardPage() {
-	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-	const { theme, setTheme } = useTheme();
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
-	const { user, logout } = useAuthStore();
-	const { searchTerm, setSearchTerm } = useBoardStore();
-	const {
-		boards,
-		isLoading,
-		refresh: refreshBoards,
-		hasData,
-	} = useBoardsLoader();
+  const { user, logout } = useAuthStore();
+  const { searchTerm, setSearchTerm } = useBoardStore();
+  const {
+    boards,
+    isLoading,
+    refresh: refreshBoards,
+    hasData,
+  } = useBoardsLoader();
 
-	const handleLogout = async () => {
-		try {
-			await logout();
-			toastService.success("Success", "Logged out successfully");
-		} catch {
-			toastService.error("Error", "Failed to logout");
-		}
-	};
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toastService.success("Success", "Logged out successfully");
+    } catch {
+      toastService.error("Error", "Failed to logout");
+    }
+  };
 
-	const toggleTheme = () => {
-		setTheme(theme === "dark" ? "light" : "dark");
-	};
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
-	const handleRefresh = async () => {
-		try {
-			await refreshBoards();
-			toastService.success("Success", "Boards refreshed successfully");
-		} catch {
-			toastService.error("Error", "Failed to refresh boards");
-		}
-	};
+  const handleRefresh = async () => {
+    try {
+      await refreshBoards();
+      toastService.success("Success", "Boards refreshed successfully");
+    } catch {
+      toastService.error("Error", "Failed to refresh boards");
+    }
+  };
 
-	if (isLoading && !hasData) {
-		return <DashboardSkeleton />;
-	}
+  if (isLoading && !hasData) {
+    return <DashboardSkeleton />;
+  }
 
-	return (
-		<div className="min-h-screen bg-background">
-			{/* Header */}
-			<header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-				<div className="container mx-auto px-4 py-4">
-					<div className="flex items-center justify-between">
-						<div className="flex items-center gap-4">
-							<h1 className="text-2xl font-bold">ArchBoard</h1>
-							<div className="relative max-w-md">
-								<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-								<Input
-									placeholder="Search boards..."
-									value={searchTerm}
-									onChange={(e) => setSearchTerm(e.target.value)}
-									className="pl-10 w-64"
-								/>
-							</div>
-						</div>
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <h1 className="text-2xl font-bold">ArchBoard</h1>
+              <div className="relative max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder="Search boards..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 w-64"
+                />
+              </div>
+            </div>
 
-						<div className="flex items-center gap-2">
-							<Button variant="outline" size="icon" onClick={handleRefresh}>
-								<RefreshCw className="h-4 w-4" />
-							</Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="icon" onClick={handleRefresh}>
+                <RefreshCw className="h-4 w-4" />
+              </Button>
 
-							<Button variant="outline" size="icon" onClick={toggleTheme}>
-								{theme === "dark" ? (
-									<Sun className="h-4 w-4" />
-								) : (
-									<Moon className="h-4 w-4" />
-								)}
-							</Button>
+              <Button variant="outline" size="icon" onClick={toggleTheme}>
+                {theme === "dark" ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )}
+              </Button>
 
-							<Button onClick={() => setIsCreateDialogOpen(true)}>
-								<Plus className="h-4 w-4 mr-2" />
-								New Board
-							</Button>
+              <Button onClick={() => setIsCreateDialogOpen(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                New Board
+              </Button>
 
-							<Button variant="outline" onClick={handleLogout}>
-								<LogOut className="h-4 w-4 mr-2" />
-								Logout
-							</Button>
-						</div>
-					</div>
+              <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
+            </div>
+          </div>
 
-					{user && (
-						<div className="mt-4">
-							<p className="text-muted-foreground">
-								Welcome back,{" "}
-								<span className="font-medium">{user.fullName}</span>
-							</p>
-						</div>
-					)}
-				</div>
-			</header>
+          {user && (
+            <div className="mt-4">
+              <p className="text-muted-foreground">
+                Welcome back,{" "}
+                <span className="font-medium">{user.fullName}</span>
+              </p>
+            </div>
+          )}
+        </div>
+      </header>
 
-			{/* Main Content */}
-			<main className="container mx-auto px-4 py-8">
-				<BoardList boards={boards} isLoading={isLoading} />
-			</main>
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8">
+        <BoardList boards={boards} isLoading={isLoading} />
+      </main>
 
-			{/* Create Board Dialog */}
-			<CreateBoardDialog
-				open={isCreateDialogOpen}
-				onOpenChange={setIsCreateDialogOpen}
-				onBoardCreated={refreshBoards}
-			/>
-		</div>
-	);
+      {/* Create Board Dialog */}
+      <CreateBoardDialog
+        open={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
+        onBoardCreated={refreshBoards}
+      />
+    </div>
+  );
 }
