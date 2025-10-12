@@ -17,9 +17,10 @@ export interface Collaborator {
 }
 
 export interface User {
-  id: number;
+  userId: number;
   email: string;
   fullName: string;
+  pictureUrl?: string;
 }
 
 export interface AuthState {

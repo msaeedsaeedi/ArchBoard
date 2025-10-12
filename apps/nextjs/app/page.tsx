@@ -1,28 +1,22 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-import { useAuthStore } from "@/lib/store/auth.store";
 
 export default function Home() {
+  const { data: session, status } = useSession();
   const router = useRouter();
-  const { isAuthenticated, isInitialized, initialize } = useAuthStore();
 
   useEffect(() => {
-    if (!isInitialized) {
-      initialize();
-    }
-  }, [isInitialized, initialize]);
+    if (status === "loading") return; // Still loading
 
-  useEffect(() => {
-    if (isInitialized) {
-      if (isAuthenticated) {
-        router.push("/dashboard");
-      } else {
-        router.push("/login");
-      }
+    if (session) {
+      router.push("/dashboard");
+    } else {
+      router.push("/login");
     }
-  }, [isAuthenticated, isInitialized, router]);
+  }, [session, status, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">

@@ -1,4 +1,4 @@
-import { BoardSkeleton } from "./board-skeleton";
+import { BoardGridSkeleton } from "./board-grid-skeleton";
 
 export function DashboardSkeleton() {
   return (
@@ -28,7 +28,7 @@ export function DashboardSkeleton() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <BoardSkeleton />
+        <BoardGridSkeleton />
       </main>
     </div>
   );
