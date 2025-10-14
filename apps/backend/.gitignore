@@ -1,5 +1,6 @@
+.encore
+encore.gen.go
+encore.gen.cue
+/.encore
 node_modules
-# Keep environment variables out of version control
-.env
-
-/generated/prisma
+/encore.gen

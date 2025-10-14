@@ -2,14 +2,20 @@
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
   "globalDependencies": ["**/.env.*local"],
+  "globalEnv": ["ENCORE_RUNTIME_LIB"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["./dist"]
     },
-    "test": {},
     "lint": {
       "dependsOn": ["^lint"]
+    },
+    "format": {
+      "dependsOn": ["^format"]
+    },
+    "test": {
+      "dependsOn": ["^test"]
     },
     "dev": {
       "cache": false,

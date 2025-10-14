@@ -1,0 +1,17 @@
+{
+  "extends": "//",
+  "files": {
+    "includes": ["!.next", "!dist", "!build"]
+  },
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noUnknownAtRules": "off"
+      }
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    }
+  }
+}

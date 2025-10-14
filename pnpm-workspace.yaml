@@ -3,15 +3,6 @@ packages:
   - packages/*
 
 onlyBuiltDependencies:
-  - '@nestjs/core'
-  - '@parcel/watcher'
-  - '@prisma/client'
-  - '@prisma/engines'
-  - '@swc/core'
   - '@tailwindcss/oxide'
-  - bcrypt
   - esbuild
-  - lmdb
-  - msgpackr-extract
-  - prisma
-  - unrs-resolver
+  - sharp
