@@ -7,7 +7,7 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
-    "clean": "rimraf .next .turbo node_modules next-env.d.ts",
+    "clean": "rimraf .next .clerk .turbo node_modules next-env.d.ts",
     "gen": "encore gen client vs6sc --output=./src/lib/client.ts --env=local"
   },
   "dependencies": {

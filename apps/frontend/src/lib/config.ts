@@ -1,11 +1,9 @@
 interface Config {
-  sessionSecret: string;
   port: number;
   environment: string;
 }
 
 export const config: Config = {
-  sessionSecret: getEnvVar("SESSION_SECRET"),
   port: getEnvVarAsNumber("PORT", 3000),
   environment: getEnvVar("NODE_ENV", "development"),
 };
