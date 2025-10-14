@@ -1,6 +1,6 @@
 "use client";
 
-import { useSignIn } from "@clerk/nextjs";
+import { useSignUp } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useState } from "react";
@@ -22,7 +22,7 @@ interface FormState {
   success?: boolean;
 }
 
-function LoginSubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
+function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
   const { pending } = useFormStatus();
   const isLoading = pending || isSubmitting;
 
@@ -31,53 +31,68 @@ function LoginSubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
       {isLoading ? (
         <>
           <Loader2 className="h-4 w-4 animate-spin mr-2" />
-          Logging in...
+          Creating Account...
         </>
       ) : (
-        "Login"
+        "Create Account"
       )}
     </Button>
   );
 }
 
-export function LoginForm({
+export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-  const { isLoaded, signIn, setActive } = useSignIn();
+  const { isLoaded, signUp, setActive } = useSignUp();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function loginAction(
+  async function signupAction(
     _prevState: FormState,
     formData: FormData,
   ): Promise<FormState> {
     setIsSubmitting(true);
 
     try {
+      const firstName = formData.get("firstName") as string;
+      const lastName = formData.get("lastName") as string;
       const email = formData.get("email") as string;
       const password = formData.get("password") as string;
+      const confirmPassword = formData.get("confirmPassword") as string;
 
-      if (!email || !password) {
-        toast.error("Email and password are required");
+      if (!firstName || !lastName || !email || !password || !confirmPassword) {
+        toast.error("All fields are required");
         return {};
       }
 
-      if (!signIn) throw Error("Clerk not loaded yet!");
+      if (password !== confirmPassword) {
+        toast.error("Passwords do not match");
+        return {};
+      }
 
-      const result = await signIn.create({
-        identifier: email,
+      if (password.length < 8) {
+        toast.error("Password must be at least 8 characters long");
+        return {};
+      }
+
+      if (!signUp) throw Error("Clerk not loaded yet!");
+
+      const result = await signUp.create({
+        firstName,
+        lastName,
+        emailAddress: email,
         password,
       });
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        toast.success("Successfully logged in!");
+        toast.success("Account created successfully!");
         router.push("/");
         return { success: true };
       } else {
         console.log("Additional verification needed", result);
-        toast.error("Additional verification needed");
+        toast.success("Please check your email to verify your account");
         return {};
       }
     } catch (err: unknown) {
@@ -85,7 +100,7 @@ export function LoginForm({
         err instanceof Error
           ? err.message
           : (err as { errors?: Array<{ message?: string }> })?.errors?.[0]
-              ?.message || "Login failed";
+              ?.message || "Account creation failed";
       toast.error(errorMessage);
       return {};
     } finally {
@@ -93,7 +108,7 @@ export function LoginForm({
     }
   }
 
-  const [, formAction] = useActionState(loginAction, { error: undefined });
+  const [, formAction] = useActionState(signupAction, { error: undefined });
 
   if (!isLoaded) {
     return (
@@ -106,10 +121,10 @@ export function LoginForm({
     );
   }
 
-  async function handleGoogleLogin() {
+  async function handleGoogleSignup() {
     try {
-      if (!signIn) throw Error("Clerk not loaded yet!");
-      await signIn.authenticateWithRedirect({
+      if (!signUp) throw Error("Clerk not loaded yet!");
+      await signUp.authenticateWithRedirect({
         strategy: "oauth_google",
         redirectUrl: "/sso-callback",
         redirectUrlComplete: "/",
@@ -117,7 +132,7 @@ export function LoginForm({
     } catch (err: unknown) {
       console.error(err);
       const errorMessage =
-        err instanceof Error ? err.message : "Google login failed";
+        err instanceof Error ? err.message : "Google signup failed";
       toast.error(errorMessage);
     }
   }
@@ -130,10 +145,33 @@ export function LoginForm({
     >
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Login to your account</h1>
+          <h1 className="text-2xl font-bold">Create your account</h1>
           <p className="text-muted-foreground text-sm text-balance">
-            Enter your email below to login to your account
+            Fill in the form below to create your account
           </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Field>
+            <FieldLabel htmlFor="firstName">First Name</FieldLabel>
+            <Input
+              id="firstName"
+              name="firstName"
+              type="text"
+              placeholder="John"
+              required
+            />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
+            <Input
+              id="lastName"
+              name="lastName"
+              type="text"
+              placeholder="Doe"
+              required
+            />
+          </Field>
         </div>
 
         <Field>
@@ -148,26 +186,35 @@ export function LoginForm({
         </Field>
 
         <Field>
-          <div className="flex items-center">
-            <FieldLabel htmlFor="password">Password</FieldLabel>
-            <a
-              href="/forgot-password"
-              className="ml-auto text-sm underline-offset-4 hover:underline"
-            >
-              Forgot your password?
-            </a>
-          </div>
+          <FieldLabel htmlFor="password">Password</FieldLabel>
           <Input id="password" name="password" type="password" required />
         </Field>
 
         <Field>
-          <LoginSubmitButton isSubmitting={isSubmitting} />
+          <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
+          <Input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            required
+          />
+        </Field>
+
+        {/* Clerk's CAPTCHA widget */}
+        <div
+          id="clerk-captcha"
+          data-cl-theme="auto"
+          data-cl-size="flexible"
+          data-cl-language="auto"
+        />
+        <Field>
+          <SubmitButton isSubmitting={isSubmitting} />
         </Field>
 
         <FieldSeparator>Or continue with</FieldSeparator>
 
         <Field>
-          <Button variant="outline" type="button" onClick={handleGoogleLogin}>
+          <Button variant="outline" type="button" onClick={handleGoogleSignup}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -180,13 +227,13 @@ export function LoginForm({
                 fill="currentColor"
               />
             </svg>
-            Login with Google
+            Sign up with Google
           </Button>
 
           <FieldDescription className="text-center">
-            Don&apos;t have an account?{" "}
-            <a href="/signup" className="underline underline-offset-4">
-              Sign up
+            Already have an account?{" "}
+            <a href="/signin" className="underline underline-offset-4">
+              Sign in
             </a>
           </FieldDescription>
         </Field>
