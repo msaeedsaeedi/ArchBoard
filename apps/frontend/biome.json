@@ -1,7 +1,7 @@
 {
   "extends": "//",
   "files": {
-    "includes": ["!.next", "!dist", "!build"]
+    "includes": ["!.next", "!dist", "!build", "!**/lib/client.ts"]
   },
   "linter": {
     "rules": {
