@@ -1,30 +1,35 @@
 "use client";
 
-import { useAuth } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
-import type { hello } from "@/lib/client";
-import getRequestClient from "@/lib/getRequestClient";
+import { useCallback, useState, useTransition } from "react";
+import { getBoards } from "./actions";
+import { BoardList } from "./components/board-list";
+import { BoardsGridSkeleton } from "./components/boards-skeleton";
+import SearchInput from "./components/search-input";
+import type { Board } from "./types";
 
 export default function DashboardPage() {
-  const { getToken, isSignedIn } = useAuth();
-  const [data, setData] = useState<hello.Response>();
+  const [isPending, startTransition] = useTransition();
+  const [boards, setBoards] = useState<Board[]>([]);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  useEffect(() => {
-    const getResult = async () => {
-      const token = await getToken();
-      const client = getRequestClient(token ?? undefined);
-      const response = await client.hello.get("Saeed");
-      setData(response);
-    };
-
-    if (isSignedIn) getResult();
-  }, [isSignedIn, getToken]);
+  const handleSearch = useCallback((term: string) => {
+    startTransition(async () => {
+      const boards = await getBoards(term);
+      setBoards(boards);
+      setIsInitialLoad(false);
+    });
+  }, []);
 
   return (
-    <div className="h-dvh flex justify-center items-center gap-4 flex-col">
-      <h1 className="text-2xl font-bold">
-        {!data ? "Loading..." : data.message}
-      </h1>
-    </div>
+    <main className="p-4">
+      <SearchInput onSearch={handleSearch} />
+      <div className="my-4">
+        {isPending || isInitialLoad ? (
+          <BoardsGridSkeleton />
+        ) : (
+          <BoardList boards={boards} />
+        )}
+      </div>
+    </main>
   );
 }
