@@ -1,0 +1,20 @@
+{
+  "name": "@repo/encore-cgen",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "bin": {
+    "encore-cgen": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "packageManager": "pnpm@10.18.2",
+  "devDependencies": {
+    "@types/node": "^24.8.1",
+    "@types/prompts": "^2.4.9",
+    "commander": "^14.0.1",
+    "prompts": "^2.4.2",
+    "typescript": "^5.9.3"
+  }
+}
