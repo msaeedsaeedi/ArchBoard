@@ -25,7 +25,7 @@ export default function DashboardHeader() {
 
   return (
     <header className="border-b bg-background">
-      <div className="container mx-auto p-4">
+      <div className="mx-auto p-4">
         <div className="flex items-center justify-between">
           <div className="flex justify-center gap-2 md:justify-start">
             <a href="/" className="flex items-center gap-2 font-medium">
