@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "encore run",
     "test": "vitest run",
+    "build": "encore check",
     "clean": "rimraf .encore .turbo encore.gen node_modules"
   },
   "devDependencies": {
