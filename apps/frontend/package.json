@@ -7,8 +7,7 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
-    "clean": "rimraf .next .clerk .turbo node_modules next-env.d.ts",
-    "gen": "encore gen client vs6sc --output=./src/lib/client.ts --env=local"
+    "clean": "rimraf .next .clerk .turbo node_modules next-env.d.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.33.3",
