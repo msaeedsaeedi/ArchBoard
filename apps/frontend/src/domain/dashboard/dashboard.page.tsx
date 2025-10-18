@@ -4,6 +4,7 @@ import { useCallback, useState, useTransition } from "react";
 import { getBoards } from "./actions";
 import { BoardList } from "./components/board-list";
 import { BoardsGridSkeleton } from "./components/boards-skeleton";
+import { CreateBoardDialog } from "./components/create-board-dialog";
 import SearchInput from "./components/search-input";
 import type { Board } from "./types";
 
@@ -20,9 +21,16 @@ export default function DashboardPage() {
     });
   }, []);
 
+  function handleSuccess(board: Board) {
+    setBoards((prevBoards) => [board, ...prevBoards]);
+  }
+
   return (
     <main className="p-4">
-      <SearchInput onSearch={handleSearch} isLoading={isPending} />
+      <div className="flex gap-4">
+        <SearchInput onSearch={handleSearch} isLoading={isPending} />
+        <CreateBoardDialog onSuccess={handleSuccess} />
+      </div>
       <div className="my-4">
         {isInitialLoad ? <BoardsGridSkeleton /> : <BoardList boards={boards} />}
       </div>

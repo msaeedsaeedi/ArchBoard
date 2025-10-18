@@ -105,7 +105,6 @@ export namespace boards {
     export interface CreateBoardRequest {
         name: string
         description: string | null
-        owner: string
     }
 
     export interface CreateBoardResponse {

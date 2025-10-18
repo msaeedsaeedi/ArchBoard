@@ -36,3 +36,36 @@ export async function getBoards(searchTerm: string): Promise<Board[]> {
     throw new Error("Something went wrong. Please try again later");
   }
 }
+
+export async function createBoard(params: {
+  name: string;
+  description?: string;
+}): Promise<Board> {
+  try {
+    const { sessionId } = await auth();
+    if (!sessionId) throw Error("Unauthorized");
+
+    const client_clerk = await clerkClient();
+    const token = await client_clerk.sessions.getToken(sessionId);
+    const client = getRequestClient(token.jwt);
+
+    const response = await client.boards.create({
+      name: params.name,
+      description: params.description || null,
+    });
+
+    const board: Board = {
+      id: response.board.id,
+      slug: response.board.slug,
+      title: response.board.name,
+      description: response.board.description ?? undefined,
+      sharedBoard: false,
+      collaborators: [],
+    };
+
+    return board;
+  } catch (error) {
+    console.error("Error creating board:", error);
+    throw new Error("Failed to create board. Please try again later");
+  }
+}
