@@ -3,16 +3,16 @@
 import { useClerk } from "@clerk/nextjs";
 import { LogOut, Moon, SquareRoundCorner, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toastService } from "@/lib/services/toast";
 
 export default function DashboardHeader() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const { signOut } = useClerk();
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+  useEffect(() => setMounted(true), []);
 
   const handleLogout = async () => {
     try {
@@ -36,13 +36,19 @@ export default function DashboardHeader() {
             </a>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" onClick={toggleTheme}>
-              {theme === "dark" ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-            </Button>
+            {mounted && (
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )}
+              </Button>
+            )}
             <Button variant="outline" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />
               Logout
