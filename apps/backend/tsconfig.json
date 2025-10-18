@@ -8,7 +8,7 @@
     "types": ["node"],
     "paths": {
       "~encore/*": ["./encore.gen/*"],
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     },
 
     /* Workspace Settings */

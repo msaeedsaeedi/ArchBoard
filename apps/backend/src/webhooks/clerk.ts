@@ -53,8 +53,14 @@ export const clerk = api.raw(
         const lastName = evt.data.last_name;
         const image_url = evt.data.image_url;
 
+        if (!id) {
+          resp.writeHead(400, { "Content-Type": "text/plain" });
+          resp.end("Missing required user information");
+          return;
+        }
+
         const data = {
-          name: `${firstName} ${lastName}`,
+          name: firstName || lastName ? `${firstName} ${lastName}` : undefined,
           image_url,
         };
         await db.update(users).set(data).where(eq(users.id, id));
