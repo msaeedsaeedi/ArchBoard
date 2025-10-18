@@ -6,7 +6,7 @@ export interface Collaborator {
 }
 
 export interface Board {
-  id: number;
+  id: string;
   slug: string;
   title: string;
   description?: string;

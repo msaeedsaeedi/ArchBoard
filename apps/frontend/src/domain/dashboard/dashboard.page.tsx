@@ -22,13 +22,9 @@ export default function DashboardPage() {
 
   return (
     <main className="p-4">
-      <SearchInput onSearch={handleSearch} />
+      <SearchInput onSearch={handleSearch} isLoading={isPending} />
       <div className="my-4">
-        {isPending || isInitialLoad ? (
-          <BoardsGridSkeleton />
-        ) : (
-          <BoardList boards={boards} />
-        )}
+        {isInitialLoad ? <BoardsGridSkeleton /> : <BoardList boards={boards} />}
       </div>
     </main>
   );
