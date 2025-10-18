@@ -25,10 +25,10 @@ importers:
         version: 2.17.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       drizzle-orm:
         specifier: ^0.44.6
-        version: 0.44.6(pg@8.16.3)
+        version: 0.44.6(@types/pg@8.15.5)(pg@8.16.3)
       encore.dev:
-        specifier: ^1.50.4
-        version: 1.50.4
+        specifier: ^1.50.6
+        version: 1.50.6
       pg:
         specifier: ^8.16.3
         version: 8.16.3
@@ -42,6 +42,9 @@ importers:
       '@types/node':
         specifier: ^20.5.7
         version: 20.19.21
+      '@types/pg':
+        specifier: ^8.15.5
+        version: 8.15.5
       drizzle-kit:
         specifier: ^0.31.5
         version: 0.31.5
@@ -1680,6 +1683,9 @@ packages:
   '@types/node@24.8.1':
     resolution: {integrity: sha512-alv65KGRadQVfVcG69MuB4IzdYVpRwMG/mq8KWOaoOdyY617P5ivaDiMCGOFDWD2sAn5Q0mR3mRtUOgm99hL9Q==}
 
+  '@types/pg@8.15.5':
+    resolution: {integrity: sha512-LF7lF6zWEKxuT3/OR8wAZGzkg4ENGXFNyiV/JeOt9z5B+0ZVwbql9McqX5c/WStFq1GaGso7H1AzP/qSzmlCKQ==}
+
   '@types/prompts@2.4.9':
     resolution: {integrity: sha512-qTxFi6Buiu8+50/+3DGIWLHM6QuWsEKugJnnP6iv2Mc4ncxE4A/OJkjuVOA+5X0X1S/nq5VJRa8Lu+nwcvbrKA==}
 
@@ -2097,8 +2103,8 @@ packages:
     resolution: {integrity: sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg==}
     engines: {node: '>= 0.8'}
 
-  encore.dev@1.50.4:
-    resolution: {integrity: sha512-BAF3sckeurWNrBa51bCJOrCUhvXvRenfytNOQQ4IaHr1KiPorM/6XF59qKqiCkXL3Mtt9Vt3liyxd0mW024ebg==}
+  encore.dev@1.50.6:
+    resolution: {integrity: sha512-pTsG3L9wfJJxmBOSZnLDtAL3ezdZn9tOcrJOq1de+VFYE1C2oCM/iHjv3vjXhM8ELml2zdvjnUlL47Et2kZKaw==}
     engines: {node: '>=18.0.0'}
 
   enhanced-resolve@5.18.3:
@@ -4768,6 +4774,12 @@ snapshots:
     dependencies:
       undici-types: 7.14.0
 
+  '@types/pg@8.15.5':
+    dependencies:
+      '@types/node': 20.19.21
+      pg-protocol: 1.10.3
+      pg-types: 2.2.0
+
   '@types/prompts@2.4.9':
     dependencies:
       '@types/node': 20.19.21
@@ -5033,8 +5045,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.44.6(pg@8.16.3):
+  drizzle-orm@0.44.6(@types/pg@8.15.5)(pg@8.16.3):
     optionalDependencies:
+      '@types/pg': 8.15.5
       pg: 8.16.3
 
   dunder-proto@1.0.1:
@@ -5064,7 +5077,7 @@ snapshots:
 
   encodeurl@2.0.0: {}
 
-  encore.dev@1.50.4: {}
+  encore.dev@1.50.6: {}
 
   enhanced-resolve@5.18.3:
     dependencies:
