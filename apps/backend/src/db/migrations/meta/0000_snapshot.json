@@ -35,12 +35,8 @@
           "name": "board_collaborators_board_id_boards_id_fk",
           "tableFrom": "board_collaborators",
           "tableTo": "boards",
-          "columnsFrom": [
-            "board_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["board_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -48,12 +44,8 @@
           "name": "board_collaborators_user_id_users_id_fk",
           "tableFrom": "board_collaborators",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -61,10 +53,7 @@
       "compositePrimaryKeys": {
         "board_collaborators_board_id_user_id_pk": {
           "name": "board_collaborators_board_id_user_id_pk",
-          "columns": [
-            "board_id",
-            "user_id"
-          ]
+          "columns": ["board_id", "user_id"]
         }
       },
       "uniqueConstraints": {},
@@ -113,12 +102,8 @@
           "name": "boards_owner_users_id_fk",
           "tableFrom": "boards",
           "tableTo": "users",
-          "columnsFrom": [
-            "owner"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -128,9 +113,7 @@
         "boards_slug_unique": {
           "name": "boards_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -173,10 +156,7 @@
     "public.roles": {
       "name": "roles",
       "schema": "public",
-      "values": [
-        "viewer",
-        "editor"
-      ]
+      "values": ["viewer", "editor"]
     }
   },
   "schemas": {},

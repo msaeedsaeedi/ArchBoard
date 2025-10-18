@@ -11,7 +11,7 @@
     "clean:root": "rimraf .turbo node_modules",
     "generate:client": "encore-cgen --output=./apps/frontend/src/lib/client.ts"
   },
-  "packageManager": "pnpm@10.18.2",
+  "packageManager": "pnpm@10.18.3",
   "devDependencies": {
     "@repo/encore-cgen": "workspace:*",
     "rimraf": "^6.0.1",

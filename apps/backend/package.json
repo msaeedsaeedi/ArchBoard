@@ -6,25 +6,27 @@
     "dev": "encore run",
     "test": "vitest run",
     "build": "encore check",
+    "lint": "biome check",
+    "format": "biome format --write",
     "clean": "rimraf .encore .turbo encore.gen node_modules"
   },
   "devDependencies": {
-    "@types/node": "^20.5.7",
+    "@types/node": "^24.8.1",
     "@types/pg": "^8.15.5",
     "drizzle-kit": "^0.31.5",
-    "typescript": "^5.2.2",
-    "vitest": "^1.5.0"
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@clerk/backend": "^2.17.2",
+    "@clerk/backend": "^2.18.3",
     "drizzle-orm": "^0.44.6",
     "encore.dev": "^1.50.6",
     "pg": "^8.16.3",
     "raw-body": "^3.0.1",
     "uuid": "^13.0.0"
   },
-  "packageManager": "pnpm@10.18.2",
+  "packageManager": "pnpm@10.18.3",
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.13.0"
+    "@rollup/rollup-linux-x64-gnu": "^4.52.5"
   }
 }
