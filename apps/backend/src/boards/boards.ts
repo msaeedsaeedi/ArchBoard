@@ -1,4 +1,6 @@
 import { APIError, api } from "encore.dev/api";
+import type { AuthData } from "@/auth/auth";
+import { getAuthData } from "~encore/auth";
 import type * as Interface from "./boards.interface";
 import BoardService from "./boards.service";
 import {
@@ -17,7 +19,8 @@ export const read = api(
     req: Interface.GetAllBoardsRequest,
   ): Promise<Interface.GetAllBoardsResponse> => {
     try {
-      return await BoardService.find(req);
+      const user = getAuthData() as AuthData;
+      return await BoardService.find(req, user);
     } catch {
       throw APIError.internal("Error retrieving boards");
     }
@@ -33,7 +36,8 @@ export const readOne = api(
     req: Interface.GetBoardRequest,
   ): Promise<Interface.GetBoardResponse> => {
     try {
-      return await BoardService.findById(req);
+      const user = getAuthData() as AuthData;
+      return await BoardService.findById(req, user);
     } catch (error) {
       if (error instanceof BoardNotFoundError) {
         throw APIError.notFound(error.message);
@@ -55,7 +59,8 @@ export const create = api(
     req: Interface.CreateBoardRequest,
   ): Promise<Interface.CreateBoardResponse> => {
     try {
-      return await BoardService.create(req);
+      const user = getAuthData() as AuthData;
+      return await BoardService.create(req, user);
     } catch (error) {
       if (error instanceof DuplicateSlugError) {
         throw APIError.alreadyExists(error.message);
@@ -80,7 +85,8 @@ export const update = api(
     req: Interface.UpdateBoardRequest,
   ): Promise<Interface.UpdateBoardResponse> => {
     try {
-      return await BoardService.update(req);
+      const user = getAuthData() as AuthData;
+      return await BoardService.update(req, user);
     } catch (error) {
       if (error instanceof BoardNotFoundError) {
         throw APIError.notFound(error.message);
@@ -116,7 +122,8 @@ export const remove = api(
     req: Interface.DeleteBoardRequest,
   ): Promise<Interface.DeleteBoardResponse> => {
     try {
-      return await BoardService.delete(req);
+      const user = getAuthData() as AuthData;
+      return await BoardService.delete(req, user);
     } catch (error) {
       if (error instanceof BoardNotFoundError) {
         throw APIError.notFound(error.message);

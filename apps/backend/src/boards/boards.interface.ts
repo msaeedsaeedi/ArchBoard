@@ -21,7 +21,7 @@ export interface GetAllBoardsRequest {
 }
 
 export type GetBoardRequest = Pick<Board, "id">;
-export type CreateBoardRequest = Omit<Board, "id" | "slug">;
+export type CreateBoardRequest = Omit<Board, "id" | "slug" | "owner">;
 export type UpdateBoardRequest = {
   [K in keyof Board]: K extends "id" ? Board[K] : Board[K] | undefined;
 };

@@ -1,7 +1,8 @@
-import { asc, DrizzleQueryError, desc, eq, like, or } from "drizzle-orm";
+import { and, asc, DrizzleQueryError, desc, eq, like, or } from "drizzle-orm";
 import log from "encore.dev/log";
 import { DatabaseError } from "pg";
 import { v4 as uuid } from "uuid";
+import type { AuthData } from "@/auth/auth";
 import { db } from "@/db/database";
 import { boards } from "@/db/schema";
 import type * as Interface from "./boards.interface";
@@ -15,9 +16,10 @@ import {
 const BoardService = {
   create: async (
     data: Interface.CreateBoardRequest,
+    user: AuthData,
   ): Promise<Interface.CreateBoardResponse> => {
     try {
-      const req = { ...data, id: uuid(), slug: "my-slug" };
+      const req = { ...data, id: uuid(), slug: "my-slug", owner: user.userID };
       const [board] = await db.insert(boards).values(req).returning();
       return { board };
     } catch (dbError: unknown) {
@@ -38,6 +40,7 @@ const BoardService = {
 
   find: async (
     params: Interface.GetAllBoardsRequest,
+    user: AuthData,
   ): Promise<Interface.GetAllBoardsResponse> => {
     try {
       const {
@@ -56,11 +59,16 @@ const BoardService = {
 
       if (searchQuery) {
         query = query.where(
-          or(
-            like(boards.name, `%${searchQuery}%`),
-            like(boards.description, `%${searchQuery}%`),
+          and(
+            eq(boards.owner, user.userID),
+            or(
+              like(boards.name, `%${searchQuery}%`),
+              like(boards.description, `%${searchQuery}%`),
+            ),
           ),
         );
+      } else {
+        query = query.where(eq(boards.owner, user.userID));
       }
 
       if (sortBy === "name") {
@@ -95,12 +103,13 @@ const BoardService = {
 
   findById: async (
     params: Interface.GetBoardRequest,
+    user: AuthData,
   ): Promise<Interface.GetBoardResponse> => {
     try {
       const [board] = await db
         .select()
         .from(boards)
-        .where(eq(boards.id, params.id))
+        .where(and(eq(boards.owner, user.userID), eq(boards.id, params.id)))
         .limit(1);
 
       if (!board) {
@@ -121,6 +130,7 @@ const BoardService = {
 
   update: async (
     params: Interface.UpdateBoardRequest,
+    user: AuthData,
   ): Promise<Interface.UpdateBoardResponse> => {
     const { id, ...updateData } = params;
 
@@ -136,7 +146,7 @@ const BoardService = {
       const [updatedBoard] = await db
         .update(boards)
         .set(filteredData)
-        .where(eq(boards.id, id))
+        .where(and(eq(boards.owner, user.userID), eq(boards.id, id)))
         .returning();
 
       if (!updatedBoard) {
@@ -162,11 +172,12 @@ const BoardService = {
 
   delete: async (
     params: Interface.DeleteBoardRequest,
+    user: AuthData,
   ): Promise<Interface.DeleteBoardResponse> => {
     try {
       const [deletedBoard] = await db
         .delete(boards)
-        .where(eq(boards.id, params.id))
+        .where(and(eq(boards.owner, user.userID), eq(boards.id, params.id)))
         .returning();
 
       if (!deletedBoard) {

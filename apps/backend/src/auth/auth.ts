@@ -16,10 +16,9 @@ interface AuthParams {
   authorization: Header<"Authorization">;
 }
 
-interface AuthData {
+export interface AuthData {
   userID: string;
   imageUrl: string;
-  emailAddress: string | null;
 }
 
 const myAuthHandler = authHandler(
@@ -41,7 +40,6 @@ const myAuthHandler = authHandler(
       return {
         userID: user.id,
         imageUrl: user.imageUrl,
-        emailAddress: user.emailAddresses[0].emailAddress || null,
       };
     } catch (e) {
       log.error(e);

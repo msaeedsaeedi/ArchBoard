@@ -1,5 +1,5 @@
 export class BoardNotFoundError extends Error {
-  constructor(message = "Board not found") {
+  constructor(message = "Board not found or does not belong to user") {
     super(message);
     this.name = "BoardNotFoundError";
   }
