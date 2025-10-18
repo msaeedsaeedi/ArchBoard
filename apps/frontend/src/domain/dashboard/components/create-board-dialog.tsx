@@ -53,18 +53,19 @@ export function CreateBoardDialog({ onSuccess }: CreateBoardDialogProps) {
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger>
-          <Tooltip>
-            <TooltipTrigger asChild>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
               <Button variant="outline" size="icon" aria-label="Create Board">
                 <PlusIcon />
               </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Create new board</p>
-            </TooltipContent>
-          </Tooltip>
-        </DialogTrigger>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Create new board</p>
+          </TooltipContent>
+        </Tooltip>
+
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Create New Board</DialogTitle>
@@ -81,18 +82,19 @@ export function CreateBoardDialog({ onSuccess }: CreateBoardDialogProps) {
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger>
-        <Tooltip>
-          <TooltipTrigger asChild>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DrawerTrigger asChild>
             <Button variant="outline" size="icon" aria-label="Create Board">
               <PlusIcon />
             </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Create new board</p>
-          </TooltipContent>
-        </Tooltip>
-      </DrawerTrigger>
+          </DrawerTrigger>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Create new board</p>
+        </TooltipContent>
+      </Tooltip>
+
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>Create New Board</DrawerTitle>
