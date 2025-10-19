@@ -20,14 +20,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Board } from "../types";
 import { DeleteBoardDialog } from "./delete-board-dialog";
+import { EditBoardDialog } from "./edit-board-dialog";
 
 interface BoardCardProps {
   board: Board;
   onDelete?: (boardId: string) => void;
+  onUpdate?: (board: Board) => void;
 }
 
-export default function BoardCard({ board, onDelete }: BoardCardProps) {
+export default function BoardCard({
+  board,
+  onDelete,
+  onUpdate,
+}: BoardCardProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
 
   const maxCollaboratorsToShow = 3;
   const collaboratorsToShow =
@@ -35,7 +42,6 @@ export default function BoardCard({ board, onDelete }: BoardCardProps) {
   const remainingCount =
     (board.collaborators?.length || 0) - maxCollaboratorsToShow;
 
-  function onEdit(_board: Board) {}
   function onManageCollaborators(_board: Board) {}
 
   function handleDeleteClick() {
@@ -45,6 +51,11 @@ export default function BoardCard({ board, onDelete }: BoardCardProps) {
   function handleDeleteSuccess(boardId: string) {
     setShowDeleteDialog(false);
     onDelete?.(boardId);
+  }
+
+  function handleEditSuccess(updated: Board) {
+    setShowEditDialog(false);
+    onUpdate?.(updated);
   }
 
   return (
@@ -63,7 +74,7 @@ export default function BoardCard({ board, onDelete }: BoardCardProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
-              <DropdownMenuItem onClick={() => onEdit(board)}>
+              <DropdownMenuItem onClick={() => setShowEditDialog(true)}>
                 <Edit className="mr-2 h-4 w-4" />
                 Edit
               </DropdownMenuItem>
@@ -150,6 +161,13 @@ export default function BoardCard({ board, onDelete }: BoardCardProps) {
         open={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}
         onSuccess={handleDeleteSuccess}
+      />
+      {/* Edit Dialog - Outside the dropdown */}
+      <EditBoardDialog
+        board={board}
+        open={showEditDialog}
+        onOpenChange={setShowEditDialog}
+        onSuccess={handleEditSuccess}
       />
     </Card>
   );

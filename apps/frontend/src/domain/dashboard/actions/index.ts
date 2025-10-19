@@ -83,3 +83,48 @@ export async function deleteBoard(boardId: string): Promise<void> {
     throw new Error("Failed to delete board. Please try again later");
   }
 }
+
+export async function updateBoard(params: {
+  id: string;
+  name?: string;
+  description?: string | null;
+}): Promise<Board> {
+  try {
+    const { sessionId } = await auth();
+    if (!sessionId) throw Error("Unauthorized");
+
+    const client_clerk = await clerkClient();
+    const token = await client_clerk.sessions.getToken(sessionId);
+    const client = getRequestClient(token.jwt);
+
+    // Only send fields that are provided
+    const updateData: {
+      id: string;
+      name?: string;
+      description?: string | null;
+    } = { id: params.id };
+
+    if (params.name !== undefined) {
+      updateData.name = params.name;
+    }
+
+    if (params.description !== undefined) {
+      updateData.description = params.description;
+    }
+
+    const response = await client.boards.update(params.id, updateData);
+
+    const board: Board = {
+      id: response.board.id,
+      slug: response.board.slug,
+      title: response.board.name,
+      description: response.board.description ?? undefined,
+      collaborators: [],
+    };
+
+    return board;
+  } catch (error) {
+    console.error("Error updating board:", error);
+    throw new Error("Failed to update board. Please try again later");
+  }
+}

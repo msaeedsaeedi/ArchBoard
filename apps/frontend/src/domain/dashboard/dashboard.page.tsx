@@ -31,6 +31,12 @@ export default function DashboardPage() {
     );
   }
 
+  function handleBoardUpdate(updated: Board) {
+    setBoards((prevBoards) =>
+      prevBoards.map((b) => (b.id === updated.id ? updated : b)),
+    );
+  }
+
   return (
     <main className="p-4">
       <div className="flex gap-4">
@@ -41,7 +47,11 @@ export default function DashboardPage() {
         {isInitialLoad ? (
           <BoardsGridSkeleton />
         ) : (
-          <BoardList boards={boards} onBoardDelete={handleBoardDelete} />
+          <BoardList
+            boards={boards}
+            onBoardDelete={handleBoardDelete}
+            onBoardUpdate={handleBoardUpdate}
+          />
         )}
       </div>
     </main>
