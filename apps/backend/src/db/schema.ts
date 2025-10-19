@@ -10,7 +10,7 @@ export const users = p.pgTable("users", {
 });
 
 export const boards = p.pgTable("boards", {
-  id: p.uuid().primaryKey(),
+  boardId: p.uuid().primaryKey(),
   name: p.text().notNull(),
   slug: p.text().notNull().unique(),
   description: p.text(),
@@ -26,7 +26,7 @@ export const boardCollaborators = p.pgTable(
     board_id: p
       .uuid()
       .notNull()
-      .references(() => boards.id),
+      .references(() => boards.boardId),
     user_id: p
       .text()
       .notNull()

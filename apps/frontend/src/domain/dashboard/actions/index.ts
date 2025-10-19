@@ -21,7 +21,7 @@ export async function getBoards(searchTerm: string): Promise<Board[]> {
 
     const boards = response.boards.map(
       (board: boards.Board): Board => ({
-        id: board.id,
+        boardId: board.boardId,
         slug: board.slug,
         title: board.name,
         description: board.description ?? undefined,
@@ -54,7 +54,7 @@ export async function createBoard(params: {
     });
 
     const board: Board = {
-      id: response.board.id,
+      boardId: response.board.boardId,
       slug: response.board.slug,
       title: response.board.name,
       description: response.board.description ?? undefined,
@@ -115,7 +115,7 @@ export async function updateBoard(params: {
     const response = await client.boards.update(params.id, updateData);
 
     const board: Board = {
-      id: response.board.id,
+      boardId: response.board.boardId,
       slug: response.board.slug,
       title: response.board.name,
       description: response.board.description ?? undefined,

@@ -18,12 +18,15 @@ const CollaboratorService = {
     user: AuthData,
   ): Promise<Interface.GetCollaboratorsResponse> => {
     const access = await db
-      .select({ boardId: boards.id })
+      .select({ boardId: boards.boardId })
       .from(boards)
-      .leftJoin(boardCollaborators, eq(boardCollaborators.board_id, boards.id))
+      .leftJoin(
+        boardCollaborators,
+        eq(boardCollaborators.board_id, boards.boardId),
+      )
       .where(
         and(
-          eq(boards.id, params.id),
+          eq(boards.boardId, params.boardId),
           or(
             eq(boards.owner, user.userID),
             eq(boardCollaborators.user_id, user.userID),
@@ -44,14 +47,14 @@ const CollaboratorService = {
       })
       .from(boardCollaborators)
       .innerJoin(users, eq(users.id, boardCollaborators.user_id))
-      .where(eq(boardCollaborators.board_id, params.id));
+      .where(eq(boardCollaborators.board_id, params.boardId));
 
     if (!collaborators.length) {
       throw new CollaboratorsNotFoundError();
     }
 
     return {
-      id: params.id,
+      boardId: params.boardId,
       collaborators: collaborators.map((collaborator) => ({
         userId: collaborator.userId,
         fullName: collaborator.fullName,
@@ -68,7 +71,7 @@ const CollaboratorService = {
     const board = await db
       .select({ owner: boards.owner })
       .from(boards)
-      .where(eq(boards.id, params.id))
+      .where(eq(boards.boardId, params.boardId))
       .limit(1);
 
     if (!board.length) {
@@ -103,7 +106,7 @@ const CollaboratorService = {
       .from(boardCollaborators)
       .where(
         and(
-          eq(boardCollaborators.board_id, params.id),
+          eq(boardCollaborators.board_id, params.boardId),
           eq(boardCollaborators.user_id, params.userId),
         ),
       )
@@ -117,14 +120,14 @@ const CollaboratorService = {
     const [collaborator] = await db
       .insert(boardCollaborators)
       .values({
-        board_id: params.id,
+        board_id: params.boardId,
         user_id: params.userId,
         role: params.role,
       })
       .returning();
 
     return {
-      id: collaborator.board_id,
+      boardId: collaborator.board_id,
       collaborator: {
         userId: collaborator.user_id,
         fullName: targetUser[0].name,
@@ -141,7 +144,7 @@ const CollaboratorService = {
     const board = await db
       .select({ owner: boards.owner })
       .from(boards)
-      .where(eq(boards.id, params.id))
+      .where(eq(boards.boardId, params.boardId))
       .limit(1);
 
     if (!board.length) {
@@ -163,7 +166,7 @@ const CollaboratorService = {
       .from(boardCollaborators)
       .where(
         and(
-          eq(boardCollaborators.board_id, params.id),
+          eq(boardCollaborators.board_id, params.boardId),
           eq(boardCollaborators.user_id, params.userId),
         ),
       )
@@ -178,13 +181,13 @@ const CollaboratorService = {
       .delete(boardCollaborators)
       .where(
         and(
-          eq(boardCollaborators.board_id, params.id),
+          eq(boardCollaborators.board_id, params.boardId),
           eq(boardCollaborators.user_id, params.userId),
         ),
       );
 
     return {
-      id: params.id,
+      boardId: params.boardId,
       userId: params.userId,
     };
   },
@@ -197,7 +200,7 @@ const CollaboratorService = {
     const board = await db
       .select({ owner: boards.owner })
       .from(boards)
-      .where(eq(boards.id, params.id))
+      .where(eq(boards.boardId, params.boardId))
       .limit(1);
 
     if (!board.length) {
@@ -219,7 +222,7 @@ const CollaboratorService = {
       .innerJoin(users, eq(users.id, boardCollaborators.user_id))
       .where(
         and(
-          eq(boardCollaborators.board_id, params.id),
+          eq(boardCollaborators.board_id, params.boardId),
           eq(boardCollaborators.user_id, params.userId),
         ),
       )
@@ -235,13 +238,13 @@ const CollaboratorService = {
       .set({ role: params.role })
       .where(
         and(
-          eq(boardCollaborators.board_id, params.id),
+          eq(boardCollaborators.board_id, params.boardId),
           eq(boardCollaborators.user_id, params.userId),
         ),
       );
 
     return {
-      id: params.id,
+      boardId: params.boardId,
       collaborator: {
         userId: params.userId,
         fullName: collaboratorResult[0].fullName,

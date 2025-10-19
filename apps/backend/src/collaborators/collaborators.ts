@@ -20,7 +20,7 @@ export const read = api(
   {
     expose: true,
     method: "GET",
-    path: "/boards/:id/collaborators",
+    path: "/boards/:boardId/collaborators",
     auth: true,
   },
   async (
@@ -52,7 +52,7 @@ export const add = api(
   {
     expose: true,
     method: "POST",
-    path: "/boards/:id/collaborators",
+    path: "/boards/:boardId/collaborators",
     auth: true,
   },
   async (
@@ -90,7 +90,7 @@ export const remove = api(
   {
     expose: true,
     method: "DELETE",
-    path: "/boards/:id/collaborators/:userId",
+    path: "/boards/:boardId/collaborators/:userId",
     auth: true,
   },
   async (
@@ -128,7 +128,7 @@ export const updateRole = api(
   {
     expose: true,
     method: "PATCH",
-    path: "/boards/:id/collaborators/:userId/role",
+    path: "/boards/:boardId/collaborators/:userId/role",
     auth: true,
   },
   async (

@@ -20,7 +20,7 @@ const BoardService = {
   ): Promise<Interface.CreateBoardResponse> => {
     try {
       const id = uuid();
-      const req = { ...data, id, slug: id, owner: user.userID }; // TODO: Implement scalable slug generation
+      const req = { ...data, boardId: id, slug: id, owner: user.userID }; // TODO: Implement scalable slug generation
       const [board] = await db.insert(boards).values(req).returning();
       return { board };
     } catch (dbError: unknown) {
@@ -77,7 +77,7 @@ const BoardService = {
       } else if (sortBy === "slug") {
         query = query.orderBy(orderDirection(boards.slug));
       } else {
-        query = query.orderBy(orderDirection(boards.id));
+        query = query.orderBy(orderDirection(boards.boardId));
       }
 
       const result = await query
@@ -110,7 +110,12 @@ const BoardService = {
       const [board] = await db
         .select()
         .from(boards)
-        .where(and(eq(boards.owner, user.userID), eq(boards.id, params.id)))
+        .where(
+          and(
+            eq(boards.owner, user.userID),
+            eq(boards.boardId, params.boardId),
+          ),
+        )
         .limit(1);
 
       if (!board) {
@@ -133,7 +138,7 @@ const BoardService = {
     params: Interface.UpdateBoardRequest,
     user: AuthData,
   ): Promise<Interface.UpdateBoardResponse> => {
-    const { id, ...updateData } = params;
+    const { boardId: id, ...updateData } = params;
 
     const filteredData = Object.fromEntries(
       Object.entries(updateData).filter(([_, value]) => value !== undefined),
@@ -147,7 +152,7 @@ const BoardService = {
       const [updatedBoard] = await db
         .update(boards)
         .set(filteredData)
-        .where(and(eq(boards.owner, user.userID), eq(boards.id, id)))
+        .where(and(eq(boards.owner, user.userID), eq(boards.boardId, id)))
         .returning();
 
       if (!updatedBoard) {
@@ -178,7 +183,12 @@ const BoardService = {
     try {
       const [deletedBoard] = await db
         .delete(boards)
-        .where(and(eq(boards.owner, user.userID), eq(boards.id, params.id)))
+        .where(
+          and(
+            eq(boards.owner, user.userID),
+            eq(boards.boardId, params.boardId),
+          ),
+        )
         .returning();
 
       if (!deletedBoard) {

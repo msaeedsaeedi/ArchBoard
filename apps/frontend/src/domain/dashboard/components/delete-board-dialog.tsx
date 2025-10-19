@@ -38,9 +38,9 @@ export function DeleteBoardDialog({
 
     setIsDeleting(true);
     try {
-      await deleteBoard(board.id);
+      await deleteBoard(board.boardId);
       toastService.success("Board deleted successfully");
-      onSuccess?.(board.id);
+      onSuccess?.(board.boardId);
       onOpenChange(false);
     } catch (error) {
       console.error("Failed to delete board:", error);

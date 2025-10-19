@@ -31,7 +31,7 @@ export const read = api(
  * Get Single Board
  */
 export const readOne = api(
-  { expose: true, method: "GET", path: "/boards/:id", auth: true },
+  { expose: true, method: "GET", path: "/boards/:boardId", auth: true },
   async (
     req: Interface.GetBoardRequest,
   ): Promise<Interface.GetBoardResponse> => {
@@ -80,7 +80,7 @@ export const create = api(
  * Update Board
  */
 export const update = api(
-  { expose: true, method: "PATCH", path: "/boards/:id", auth: true },
+  { expose: true, method: "PATCH", path: "/boards/:boardId", auth: true },
   async (
     req: Interface.UpdateBoardRequest,
   ): Promise<Interface.UpdateBoardResponse> => {
@@ -115,7 +115,7 @@ export const remove = api(
   {
     expose: true,
     method: "DELETE",
-    path: "/boards/:id",
+    path: "/boards/:boardId",
     auth: true,
   },
   async (

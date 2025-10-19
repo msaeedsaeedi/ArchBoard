@@ -97,7 +97,7 @@ export namespace auth {
 
 export namespace boards {
     export interface Board {
-        id: string
+        boardId: string
         name: string
         slug: string
         description: string | null
@@ -192,27 +192,27 @@ export namespace boards {
         /**
          * Get Single Board
          */
-        public async readOne(id: string): Promise<GetBoardResponse> {
+        public async readOne(boardId: string): Promise<GetBoardResponse> {
             // Now make the actual call to the API
-            const resp = await this.baseClient.callTypedAPI("GET", `/boards/${encodeURIComponent(id)}`)
+            const resp = await this.baseClient.callTypedAPI("GET", `/boards/${encodeURIComponent(boardId)}`)
             return await resp.json() as GetBoardResponse
         }
 
         /**
          * Delete Board
          */
-        public async remove(id: string): Promise<DeleteBoardResponse> {
+        public async remove(boardId: string): Promise<DeleteBoardResponse> {
             // Now make the actual call to the API
-            const resp = await this.baseClient.callTypedAPI("DELETE", `/boards/${encodeURIComponent(id)}`)
+            const resp = await this.baseClient.callTypedAPI("DELETE", `/boards/${encodeURIComponent(boardId)}`)
             return await resp.json() as DeleteBoardResponse
         }
 
         /**
          * Update Board
          */
-        public async update(id: string, params: UpdateBoardRequest): Promise<UpdateBoardResponse> {
+        public async update(boardId: string, params: UpdateBoardRequest): Promise<UpdateBoardResponse> {
             // Now make the actual call to the API
-            const resp = await this.baseClient.callTypedAPI("PATCH", `/boards/${encodeURIComponent(id)}`, JSON.stringify(params))
+            const resp = await this.baseClient.callTypedAPI("PATCH", `/boards/${encodeURIComponent(boardId)}`, JSON.stringify(params))
             return await resp.json() as UpdateBoardResponse
         }
     }
@@ -226,7 +226,7 @@ export namespace collaborators {
 
     export interface AddCollaboratorResponse {
         collaborator: Collaborator
-        id: string
+        boardId: string
     }
 
     export interface ChangeRoleRequest {
@@ -235,7 +235,7 @@ export namespace collaborators {
 
     export interface ChangeRoleResponse {
         collaborator: Collaborator
-        id: string
+        boardId: string
     }
 
     export interface Collaborator {
@@ -246,12 +246,12 @@ export namespace collaborators {
 
     export interface GetCollaboratorsResponse {
         collaborators: Collaborator[]
-        id: string
+        boardId: string
     }
 
     export interface RemoveCollaboratorResponse {
         userId: string
-        id: string
+        boardId: string
     }
 
     export type Role = "viewer" | "editor"
@@ -270,36 +270,36 @@ export namespace collaborators {
         /**
          * Add Collaborator
          */
-        public async add(id: string, params: AddCollaboratorRequest): Promise<AddCollaboratorResponse> {
+        public async add(boardId: string, params: AddCollaboratorRequest): Promise<AddCollaboratorResponse> {
             // Now make the actual call to the API
-            const resp = await this.baseClient.callTypedAPI("POST", `/boards/${encodeURIComponent(id)}/collaborators`, JSON.stringify(params))
+            const resp = await this.baseClient.callTypedAPI("POST", `/boards/${encodeURIComponent(boardId)}/collaborators`, JSON.stringify(params))
             return await resp.json() as AddCollaboratorResponse
         }
 
         /**
          * Get All Collaborators
          */
-        public async read(id: string): Promise<GetCollaboratorsResponse> {
+        public async read(boardId: string): Promise<GetCollaboratorsResponse> {
             // Now make the actual call to the API
-            const resp = await this.baseClient.callTypedAPI("GET", `/boards/${encodeURIComponent(id)}/collaborators`)
+            const resp = await this.baseClient.callTypedAPI("GET", `/boards/${encodeURIComponent(boardId)}/collaborators`)
             return await resp.json() as GetCollaboratorsResponse
         }
 
         /**
          * Remove Collaborator
          */
-        public async remove(id: string, userId: string): Promise<RemoveCollaboratorResponse> {
+        public async remove(boardId: string, userId: string): Promise<RemoveCollaboratorResponse> {
             // Now make the actual call to the API
-            const resp = await this.baseClient.callTypedAPI("DELETE", `/boards/${encodeURIComponent(id)}/collaborators/${encodeURIComponent(userId)}`)
+            const resp = await this.baseClient.callTypedAPI("DELETE", `/boards/${encodeURIComponent(boardId)}/collaborators/${encodeURIComponent(userId)}`)
             return await resp.json() as RemoveCollaboratorResponse
         }
 
         /**
          * Change Collaborator Role
          */
-        public async updateRole(id: string, userId: string, params: ChangeRoleRequest): Promise<ChangeRoleResponse> {
+        public async updateRole(boardId: string, userId: string, params: ChangeRoleRequest): Promise<ChangeRoleResponse> {
             // Now make the actual call to the API
-            const resp = await this.baseClient.callTypedAPI("PATCH", `/boards/${encodeURIComponent(id)}/collaborators/${encodeURIComponent(userId)}/role`, JSON.stringify(params))
+            const resp = await this.baseClient.callTypedAPI("PATCH", `/boards/${encodeURIComponent(boardId)}/collaborators/${encodeURIComponent(userId)}/role`, JSON.stringify(params))
             return await resp.json() as ChangeRoleResponse
         }
     }

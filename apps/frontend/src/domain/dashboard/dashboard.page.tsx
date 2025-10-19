@@ -27,13 +27,13 @@ export default function DashboardPage() {
 
   function handleBoardDelete(boardId: string) {
     setBoards((prevBoards) =>
-      prevBoards.filter((board) => board.id !== boardId),
+      prevBoards.filter((board) => board.boardId !== boardId),
     );
   }
 
   function handleBoardUpdate(updated: Board) {
     setBoards((prevBoards) =>
-      prevBoards.map((b) => (b.id === updated.id ? updated : b)),
+      prevBoards.map((b) => (b.boardId === updated.boardId ? updated : b)),
     );
   }
 

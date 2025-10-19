@@ -153,7 +153,7 @@ export function EditBoardForm({
         description !== (board.description?.trim() ?? "");
 
       const updateData = {
-        id: board.id,
+        id: board.boardId,
         ...(nameChanged && { name }),
         ...(descriptionChanged && { description }),
       };

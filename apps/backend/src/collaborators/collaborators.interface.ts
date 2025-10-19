@@ -2,7 +2,7 @@ import type { MinLen, StartsWith } from "encore.dev/validate";
 import type { Board } from "@/boards/boards.interface";
 
 export type Role = "viewer" | "editor";
-export type BoardId = Pick<Board, "id">;
+export type BoardId = Pick<Board, "boardId">;
 export type FullName = string & MinLen<1>;
 
 export interface Collaborator {
