@@ -19,7 +19,8 @@ const BoardService = {
     user: AuthData,
   ): Promise<Interface.CreateBoardResponse> => {
     try {
-      const req = { ...data, id: uuid(), slug: "my-slug", owner: user.userID };
+      const id = uuid();
+      const req = { ...data, id, slug: id, owner: user.userID }; // TODO: Implement scalable slug generation
       const [board] = await db.insert(boards).values(req).returning();
       return { board };
     } catch (dbError: unknown) {
