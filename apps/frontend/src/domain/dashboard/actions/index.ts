@@ -77,7 +77,7 @@ export async function deleteBoard(boardId: string): Promise<void> {
     const token = await client_clerk.sessions.getToken(sessionId);
     const client = getRequestClient(token.jwt);
 
-    await client.boards.remove(boardId);
+    await client.boards.softRemove(boardId);
   } catch (error) {
     console.error("Error deleting board:", error);
     throw new Error("Failed to delete board. Please try again later");

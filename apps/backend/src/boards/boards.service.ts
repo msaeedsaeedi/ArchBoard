@@ -1,4 +1,14 @@
-import { and, asc, DrizzleQueryError, desc, eq, like, or } from "drizzle-orm";
+import {
+  and,
+  asc,
+  DrizzleQueryError,
+  desc,
+  eq,
+  isNotNull,
+  like,
+  lt,
+  or,
+} from "drizzle-orm";
 import log from "encore.dev/log";
 import { DatabaseError } from "pg";
 import { v4 as uuid } from "uuid";
@@ -176,27 +186,24 @@ const BoardService = {
     }
   },
 
-  delete: async (
-    params: Interface.DeleteBoardRequest,
+  softDelete: async (
+    req: Interface.DeleteBoardRequest,
     user: AuthData,
   ): Promise<Interface.DeleteBoardResponse> => {
     try {
-      const [deletedBoard] = await db
-        .delete(boards)
+      const result = await db
+        .update(boards)
+        .set({ deletedAt: new Date() })
         .where(
-          and(
-            eq(boards.owner, user.userID),
-            eq(boards.boardId, params.boardId),
-          ),
-        )
-        .returning();
+          and(eq(boards.owner, user.userID), eq(boards.boardId, req.boardId)),
+        );
 
-      if (!deletedBoard) {
+      if (result.rowCount === 0) {
         throw new BoardNotFoundError();
       }
 
       return { success: true };
-    } catch (dbError: unknown) {
+    } catch (dbError) {
       if (dbError instanceof DrizzleQueryError) {
         if (dbError.cause instanceof DatabaseError) {
           // Handle specific database errors if needed
@@ -204,6 +211,21 @@ const BoardService = {
       }
       log.error(JSON.stringify(dbError));
       throw dbError;
+    }
+  },
+
+  deleteOldBoards: async (): Promise<void> => {
+    const THIRTY_DAYS_AGO = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const result = await db
+      .delete(boards)
+      .where(
+        and(isNotNull(boards.deletedAt), lt(boards.deletedAt, THIRTY_DAYS_AGO)),
+      );
+
+    if (result.rowCount === 0) {
+      log.info("No old boards found for hard deletion.");
+    } else {
+      log.info(`Successfully deleted ${result.rowCount} old boards.`);
     }
   },
 };

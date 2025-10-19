@@ -1,4 +1,5 @@
 import { APIError, api } from "encore.dev/api";
+import { CronJob } from "encore.dev/cron";
 import log from "encore.dev/log";
 import type { AuthData } from "@/auth/auth";
 import { getAuthData } from "~encore/auth";
@@ -114,9 +115,9 @@ export const update = api(
 );
 
 /**
- * Delete Board
+ * Soft Delete Board
  */
-export const remove = api(
+export const softRemove = api(
   {
     expose: true,
     method: "DELETE",
@@ -128,7 +129,7 @@ export const remove = api(
   ): Promise<Interface.DeleteBoardResponse> => {
     try {
       const user = getAuthData() as AuthData;
-      return await BoardService.delete(req, user);
+      return await BoardService.softDelete(req, user);
     } catch (error) {
       log.trace("Error trace: ", error);
       if (error instanceof BoardNotFoundError) {
@@ -141,3 +142,32 @@ export const remove = api(
     }
   },
 );
+
+/**
+ * Delete Board
+ */
+export const remove = api(
+  {
+    expose: false,
+    method: "DELETE",
+    path: "/internal/hard-delete-old-boards",
+    auth: false,
+  },
+  async (): Promise<void> => {
+    try {
+      return await BoardService.deleteOldBoards();
+    } catch (error) {
+      log.trace("Error trace: ", error);
+      throw APIError.internal("Request Failed");
+    }
+  },
+);
+
+/**
+ * CRON JOB For Deleting old Boards
+ */
+const _cronJob = new CronJob("hard-delete-old-boards", {
+  title: "Hard Delete Old Boards",
+  schedule: "0 0 1 * *",
+  endpoint: remove,
+});

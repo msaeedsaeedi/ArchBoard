@@ -18,6 +18,8 @@ export const boards = p.pgTable("boards", {
     .text()
     .notNull()
     .references(() => users.id),
+  createdAt: p.timestamp().notNull().defaultNow(),
+  deletedAt: p.timestamp(),
 });
 
 export const boardCollaborators = p.pgTable(

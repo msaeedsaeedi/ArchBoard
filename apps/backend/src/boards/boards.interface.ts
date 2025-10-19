@@ -54,5 +54,4 @@ export interface UpdateBoardResponse {
 
 export interface DeleteBoardResponse {
   success: true;
-  message?: string;
 }

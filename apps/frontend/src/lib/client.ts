@@ -115,7 +115,6 @@ export namespace boards {
 
     export interface DeleteBoardResponse {
         success: true
-        message?: string
     }
 
     export interface GetAllBoardsRequest {
@@ -158,7 +157,7 @@ export namespace boards {
             this.create = this.create.bind(this)
             this.read = this.read.bind(this)
             this.readOne = this.readOne.bind(this)
-            this.remove = this.remove.bind(this)
+            this.softRemove = this.softRemove.bind(this)
             this.update = this.update.bind(this)
         }
 
@@ -199,9 +198,9 @@ export namespace boards {
         }
 
         /**
-         * Delete Board
+         * Soft Delete Board
          */
-        public async remove(boardId: string): Promise<DeleteBoardResponse> {
+        public async softRemove(boardId: string): Promise<DeleteBoardResponse> {
             // Now make the actual call to the API
             const resp = await this.baseClient.callTypedAPI("DELETE", `/boards/${encodeURIComponent(boardId)}`)
             return await resp.json() as DeleteBoardResponse
