@@ -1,4 +1,5 @@
 import { APIError, api } from "encore.dev/api";
+import log from "encore.dev/log";
 import type { AuthData } from "@/auth/auth";
 import { getAuthData } from "~encore/auth";
 import type * as Interface from "./boards.interface";
@@ -21,7 +22,8 @@ export const read = api(
     try {
       const user = getAuthData() as AuthData;
       return await BoardService.find(req, user);
-    } catch {
+    } catch (error) {
+      log.trace("Error trace: ", error);
       throw APIError.internal("Error retrieving boards");
     }
   },
@@ -39,6 +41,7 @@ export const readOne = api(
       const user = getAuthData() as AuthData;
       return await BoardService.findById(req, user);
     } catch (error) {
+      log.trace("Error trace: ", error);
       if (error instanceof BoardNotFoundError) {
         throw APIError.notFound(error.message);
       }
@@ -62,6 +65,7 @@ export const create = api(
       const user = getAuthData() as AuthData;
       return await BoardService.create(req, user);
     } catch (error) {
+      log.trace("Error trace: ", error);
       if (error instanceof DuplicateSlugError) {
         throw APIError.alreadyExists(error.message);
       }
@@ -88,6 +92,7 @@ export const update = api(
       const user = getAuthData() as AuthData;
       return await BoardService.update(req, user);
     } catch (error) {
+      log.trace("Error trace: ", error);
       if (error instanceof BoardNotFoundError) {
         throw APIError.notFound(error.message);
       }
@@ -125,6 +130,7 @@ export const remove = api(
       const user = getAuthData() as AuthData;
       return await BoardService.delete(req, user);
     } catch (error) {
+      log.trace("Error trace: ", error);
       if (error instanceof BoardNotFoundError) {
         throw APIError.notFound(error.message);
       }

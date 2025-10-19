@@ -30,6 +30,7 @@ export const read = api(
       const user = getAuthData() as AuthData;
       return await CollaboratorService.find(req, user);
     } catch (error) {
+      log.trace("Error trace: ", error);
       if (error instanceof BoardNotFoundError) {
         throw APIError.notFound(error.message);
       }
@@ -39,7 +40,6 @@ export const read = api(
       if (error instanceof APIError) {
         throw error;
       }
-      log.error(error, req);
       throw APIError.internal("Error retrieving collaborators");
     }
   },
@@ -62,6 +62,7 @@ export const add = api(
       const user = getAuthData() as AuthData;
       return await CollaboratorService.add(req, user);
     } catch (error) {
+      log.trace("Error trace: ", error);
       if (error instanceof BoardNotFoundError) {
         throw APIError.notFound(error.message);
       }
@@ -77,7 +78,6 @@ export const add = api(
       if (error instanceof APIError) {
         throw error;
       }
-      log.error(error, req);
       throw APIError.internal("Error adding collaborator");
     }
   },
@@ -100,6 +100,7 @@ export const remove = api(
       const user = getAuthData() as AuthData;
       return await CollaboratorService.remove(req, user);
     } catch (error) {
+      log.trace("Error trace: ", error);
       if (error instanceof BoardNotFoundError) {
         throw APIError.notFound(error.message);
       }
@@ -115,7 +116,6 @@ export const remove = api(
       if (error instanceof APIError) {
         throw error;
       }
-      log.error(error, req);
       throw APIError.internal("Error removing collaborator");
     }
   },
@@ -138,6 +138,7 @@ export const updateRole = api(
       const user = getAuthData() as AuthData;
       return await CollaboratorService.changeRole(req, user);
     } catch (error) {
+      log.trace("Error trace: ", error);
       if (error instanceof BoardNotFoundError) {
         throw APIError.notFound(error.message);
       }
@@ -150,7 +151,6 @@ export const updateRole = api(
       if (error instanceof APIError) {
         throw error;
       }
-      log.error(error, req);
       throw APIError.internal("Error updating collaborator role");
     }
   },
