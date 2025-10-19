@@ -2,7 +2,7 @@
 
 import { Loader2 } from "lucide-react";
 import type { ChangeEvent } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { Input } from "@/components/ui/input";
 
@@ -19,14 +19,8 @@ export default function SearchInput({
 }: SearchInputProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm] = useDebounce(searchTerm, debounceDelay);
-  const isFirstRun = useRef(true);
 
   useEffect(() => {
-    if (isFirstRun.current) {
-      isFirstRun.current = false;
-      return;
-    }
-
     onSearch?.(debouncedSearchTerm);
   }, [debouncedSearchTerm, onSearch]);
 
