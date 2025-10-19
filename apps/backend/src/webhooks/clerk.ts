@@ -27,6 +27,16 @@ export const clerk = api.raw(
       const rawBody = await getRawBody(req);
       const webRequest = await requestToWeb(req, rawBody);
 
+      if (!process.env.CLERK_WEBHOOK_SIGNING_SECRET) {
+        log.error(
+          "CLERK_WEBHOOK_SIGNING_SECRET environment variable not found",
+        );
+      } else {
+        log.debug(
+          "Clerk webhook signing key",
+          process.env.CLERK_WEBHOOK_SIGNING_SECRET,
+        );
+      }
       const evt = await verifyWebhook(webRequest);
 
       if (evt.type === "user.created") {
