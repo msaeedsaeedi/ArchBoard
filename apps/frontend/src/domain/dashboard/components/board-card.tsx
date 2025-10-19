@@ -1,6 +1,7 @@
 "use client";
 
 import { Edit, MoreVertical, Trash2, UserPlus } from "lucide-react";
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,21 +19,33 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { Board } from "../types";
+import { DeleteBoardDialog } from "./delete-board-dialog";
 
 interface BoardCardProps {
   board: Board;
+  onDelete?: (boardId: string) => void;
 }
 
-export default function BoardCard({ board }: BoardCardProps) {
+export default function BoardCard({ board, onDelete }: BoardCardProps) {
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
   const maxCollaboratorsToShow = 3;
   const collaboratorsToShow =
     board.collaborators?.slice(0, maxCollaboratorsToShow) || [];
   const remainingCount =
     (board.collaborators?.length || 0) - maxCollaboratorsToShow;
 
-  function onDelete(_board: Board) {}
   function onEdit(_board: Board) {}
   function onManageCollaborators(_board: Board) {}
+
+  function handleDeleteClick() {
+    setShowDeleteDialog(true);
+  }
+
+  function handleDeleteSuccess(boardId: string) {
+    setShowDeleteDialog(false);
+    onDelete?.(boardId);
+  }
 
   return (
     <Card className="hover:shadow-md transition-shadow cursor-pointer group">
@@ -58,7 +71,7 @@ export default function BoardCard({ board }: BoardCardProps) {
                 <UserPlus className="mr-2 h-4 w-4" />
                 Manage Collaborators
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDelete(board)}>
+              <DropdownMenuItem onClick={handleDeleteClick}>
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
@@ -130,6 +143,14 @@ export default function BoardCard({ board }: BoardCardProps) {
           </div>
         </div>
       </CardContent>
+
+      {/* Delete Dialog - Outside the dropdown to avoid nesting issues */}
+      <DeleteBoardDialog
+        board={board}
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onSuccess={handleDeleteSuccess}
+      />
     </Card>
   );
 }

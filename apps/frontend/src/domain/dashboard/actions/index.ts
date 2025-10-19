@@ -69,3 +69,19 @@ export async function createBoard(params: {
     throw new Error("Failed to create board. Please try again later");
   }
 }
+
+export async function deleteBoard(boardId: string): Promise<void> {
+  try {
+    const { sessionId } = await auth();
+    if (!sessionId) throw Error("Unauthorized");
+
+    const client_clerk = await clerkClient();
+    const token = await client_clerk.sessions.getToken(sessionId);
+    const client = getRequestClient(token.jwt);
+
+    await client.boards.remove(boardId);
+  } catch (error) {
+    console.error("Error deleting board:", error);
+    throw new Error("Failed to delete board. Please try again later");
+  }
+}

@@ -3,9 +3,10 @@ import BoardCard from "./board-card";
 
 interface BoardListProps {
   boards?: Board[];
+  onBoardDelete?: (boardId: string) => void;
 }
 
-export function BoardList({ boards }: BoardListProps) {
+export function BoardList({ boards, onBoardDelete }: BoardListProps) {
   if (!boards || boards.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -36,7 +37,7 @@ export function BoardList({ boards }: BoardListProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {boards.map((board) => (
-        <BoardCard key={board.id} board={board} />
+        <BoardCard key={board.id} board={board} onDelete={onBoardDelete} />
       ))}
     </div>
   );

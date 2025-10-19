@@ -25,6 +25,12 @@ export default function DashboardPage() {
     setBoards((prevBoards) => [board, ...prevBoards]);
   }
 
+  function handleBoardDelete(boardId: string) {
+    setBoards((prevBoards) =>
+      prevBoards.filter((board) => board.id !== boardId),
+    );
+  }
+
   return (
     <main className="p-4">
       <div className="flex gap-4">
@@ -32,7 +38,11 @@ export default function DashboardPage() {
         <CreateBoardDialog onSuccess={handleSuccess} />
       </div>
       <div className="my-4">
-        {isInitialLoad ? <BoardsGridSkeleton /> : <BoardList boards={boards} />}
+        {isInitialLoad ? (
+          <BoardsGridSkeleton />
+        ) : (
+          <BoardList boards={boards} onBoardDelete={handleBoardDelete} />
+        )}
       </div>
     </main>
   );
