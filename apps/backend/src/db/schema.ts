@@ -31,7 +31,7 @@ export const boardCollaborators = p.pgTable(
       .text()
       .notNull()
       .references(() => users.id),
-    role: rolesEnum().default("viewer"),
+    role: rolesEnum().notNull().default("viewer"),
   },
   (table) => [primaryKey({ columns: [table.board_id, table.user_id] })],
 );

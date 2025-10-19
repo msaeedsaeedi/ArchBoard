@@ -33,6 +33,7 @@ const BROWSER = typeof globalThis === "object" && ("window" in globalThis);
  */
 export default class Client {
     public readonly boards: boards.ServiceClient
+    public readonly collaborators: collaborators.ServiceClient
     public readonly webhooks: webhooks.ServiceClient
     private readonly options: ClientOptions
     private readonly target: string
@@ -49,6 +50,7 @@ export default class Client {
         this.options = options ?? {}
         const base = new BaseClient(this.target, this.options)
         this.boards = new boards.ServiceClient(base)
+        this.collaborators = new collaborators.ServiceClient(base)
         this.webhooks = new webhooks.ServiceClient(base)
     }
 
@@ -212,6 +214,93 @@ export namespace boards {
             // Now make the actual call to the API
             const resp = await this.baseClient.callTypedAPI("PATCH", `/boards/${encodeURIComponent(id)}`, JSON.stringify(params))
             return await resp.json() as UpdateBoardResponse
+        }
+    }
+}
+
+export namespace collaborators {
+    export interface AddCollaboratorRequest {
+        userId: string
+        role?: Role
+    }
+
+    export interface AddCollaboratorResponse {
+        collaborator: Collaborator
+        id: string
+    }
+
+    export interface ChangeRoleRequest {
+        role: Role
+    }
+
+    export interface ChangeRoleResponse {
+        collaborator: Collaborator
+        id: string
+    }
+
+    export interface Collaborator {
+        userId: string
+        fullName: string
+        role: Role
+    }
+
+    export interface GetCollaboratorsResponse {
+        collaborators: Collaborator[]
+        id: string
+    }
+
+    export interface RemoveCollaboratorResponse {
+        userId: string
+        id: string
+    }
+
+    export type Role = "viewer" | "editor"
+
+    export class ServiceClient {
+        private baseClient: BaseClient
+
+        constructor(baseClient: BaseClient) {
+            this.baseClient = baseClient
+            this.add = this.add.bind(this)
+            this.read = this.read.bind(this)
+            this.remove = this.remove.bind(this)
+            this.updateRole = this.updateRole.bind(this)
+        }
+
+        /**
+         * Add Collaborator
+         */
+        public async add(id: string, params: AddCollaboratorRequest): Promise<AddCollaboratorResponse> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI("POST", `/boards/${encodeURIComponent(id)}/collaborators`, JSON.stringify(params))
+            return await resp.json() as AddCollaboratorResponse
+        }
+
+        /**
+         * Get All Collaborators
+         */
+        public async read(id: string): Promise<GetCollaboratorsResponse> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI("GET", `/boards/${encodeURIComponent(id)}/collaborators`)
+            return await resp.json() as GetCollaboratorsResponse
+        }
+
+        /**
+         * Remove Collaborator
+         */
+        public async remove(id: string, userId: string): Promise<RemoveCollaboratorResponse> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI("DELETE", `/boards/${encodeURIComponent(id)}/collaborators/${encodeURIComponent(userId)}`)
+            return await resp.json() as RemoveCollaboratorResponse
+        }
+
+        /**
+         * Change Collaborator Role
+         */
+        public async updateRole(id: string, userId: string, params: ChangeRoleRequest): Promise<ChangeRoleResponse> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI("PATCH", `/boards/${encodeURIComponent(id)}/collaborators/${encodeURIComponent(userId)}/role`, JSON.stringify(params))
+            return await resp.json() as ChangeRoleResponse
         }
     }
 }
