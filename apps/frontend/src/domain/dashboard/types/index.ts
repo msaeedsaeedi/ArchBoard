@@ -10,6 +10,5 @@ export interface Board {
   slug: string;
   title: string;
   description?: string;
-  sharedBoard: boolean;
   collaborators?: Collaborator[];
 }

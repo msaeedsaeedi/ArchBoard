@@ -25,7 +25,6 @@ export async function getBoards(searchTerm: string): Promise<Board[]> {
         slug: board.slug,
         title: board.name,
         description: board.description ?? undefined,
-        sharedBoard: false, // TODO: service should return this too.
         collaborators: [], // TODO: service should return collaborators too
       }),
     );
@@ -59,8 +58,7 @@ export async function createBoard(params: {
       slug: response.board.slug,
       title: response.board.name,
       description: response.board.description ?? undefined,
-      sharedBoard: false,
-      collaborators: [],
+      collaborators: [], // TODO: service should return collaborators too
     };
 
     return board;
