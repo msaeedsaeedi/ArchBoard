@@ -1,98 +1,160 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# REST API Starter
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is a RESTful API Starter with a single Hello World API endpoint.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Prerequisites 
 
-## Description
+**Install Encore:**
+- **macOS:** `brew install encoredev/tap/encore`
+- **Linux:** `curl -L https://encore.dev/install.sh | bash`
+- **Windows:** `iwr https://encore.dev/install.ps1 | iex`
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Create app
 
-## Project setup
+Create a local app from this template:
 
 ```bash
-$ pnpm install
+encore app create my-app-name --example=ts/hello-world
 ```
 
-## Compile and run the project
+## Run app locally
+
+Run this command from your application's root folder:
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+encore run
 ```
+### Using the API
 
-## Run tests
+To see that your app is running, you can ping the API.
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+curl http://localhost:4000/hello/World
 ```
+
+### Local Development Dashboard
+
+While `encore run` is running, open [http://localhost:9400/](http://localhost:9400/) to access Encore's [local developer dashboard](https://encore.dev/docs/observability/dev-dash).
+
+Here you can see traces for all requests that you made, see your architecture diagram (just a single service for this simple example), and view API documentation in the Service Catalog.
+
+## Development
+
+### Add a new service
+
+To create a new microservice, add a file named encore.service.ts in a new directory.
+The file should export a service definition by calling `new Service`, imported from `encore.dev/service`.
+
+```ts
+import { Service } from "encore.dev/service";
+
+export default new Service("my-service");
+```
+
+Encore will now consider this directory and all its subdirectories as part of the service.
+
+Learn more in the docs: https://encore.dev/docs/ts/primitives/services
+
+### Add a new endpoint
+
+Create a new `.ts` file in your new service directory and write a regular async function within it. Then to turn it into an API endpoint, use the `api` function from the `encore.dev/api` module. This function designates it as an API endpoint.
+
+Learn more in the docs: https://encore.dev/docs/ts/primitives/defining-apis
+
+### Service-to-service API calls
+
+Calling API endpoints between services looks like regular function calls with Encore.ts.
+The only thing you need to do is import the service you want to call from `~encore/clients` and then call its API endpoints like functions.
+
+In the example below, we import the service `hello` and call the `ping` endpoint using a function call to `hello.ping`:
+
+```ts
+import { hello } from "~encore/clients"; // import 'hello' service
+
+export const myOtherAPI = api({}, async (): Promise<void> => {
+  const resp = await hello.ping({ name: "World" });
+  console.log(resp.message); // "Hello World!"
+});
+```
+
+Learn more in the docs: https://encore.dev/docs/ts/primitives/api-calls
+
+### Add a database
+
+To create a database, import `encore.dev/storage/sqldb` and call `new SQLDatabase`, assigning the result to a top-level variable. For example:
+
+```ts
+import { SQLDatabase } from "encore.dev/storage/sqldb";
+
+// Create the todo database and assign it to the "db" variable
+const db = new SQLDatabase("todo", {
+  migrations: "./migrations",
+});
+```
+
+Then create a directory `migrations` inside the service directory and add a migration file `0001_create_table.up.sql` to define the database schema. For example:
+
+```sql
+CREATE TABLE todo_item (
+  id BIGSERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  done BOOLEAN NOT NULL DEFAULT false
+  -- etc...
+);
+```
+
+Once you've added a migration, restart your app with `encore run` to start up the database and apply the migration. Keep in mind that you need to have [Docker](https://docker.com) installed and running to start the database.
+
+Learn more in the docs: https://encore.dev/docs/ts/primitives/databases
+
+### Learn more
+
+There are many more features to explore in Encore.ts, for example:
+
+- [Request Validation](https://encore.dev/docs/ts/primitives/validation)
+- [Streaming APIs](https://encore.dev/docs/ts/primitives/streaming-apis)
+- [Cron jobs](https://encore.dev/docs/ts/primitives/cron-jobs)
+- [Pub/Sub](https://encore.dev/docs/ts/primitives/pubsub)
+- [Object Storage](https://encore.dev/docs/ts/primitives/object-storage)
+- [Secrets](https://encore.dev/docs/ts/primitives/secrets)
+- [Authentication handlers](https://encore.dev/docs/ts/develop/auth)
+- [Middleware](https://encore.dev/docs/ts/develop/middleware)
 
 ## Deployment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Self-hosting
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+See the [self-hosting instructions](https://encore.dev/docs/self-host/docker-build) for how to use `encore build docker` to create a Docker image and configure it.
+
+### Encore Cloud Platform
+
+Deploy your application to a free staging environment in Encore's development cloud using `git push encore`:
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+git add -A .
+git commit -m 'Commit message'
+git push encore
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+You can also open your app in the [Cloud Dashboard](https://app.encore.dev) to integrate with GitHub, or connect your AWS/GCP account, enabling Encore to automatically handle cloud deployments for you.
 
-## Resources
+## Link to GitHub
 
-Check out a few resources that may come in handy when working with NestJS:
+Follow these steps to link your app to GitHub:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+1. Create a GitHub repo, commit and push the app.
+2. Open your app in the [Cloud Dashboard](https://app.encore.dev).
+3. Go to **Settings ➔ GitHub** and click on **Link app to GitHub** to link your app to GitHub and select the repo you just created.
+4. To configure Encore to automatically trigger deploys when you push to a specific branch name, go to the **Overview** page for your intended environment. Click on **Settings** and then in the section **Branch Push** configure the **Branch name** and hit **Save**.
+5. Commit and push a change to GitHub to trigger a deploy.
 
-## Support
+[Learn more in the docs](https://encore.dev/docs/how-to/github)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
+## Testing
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+To run tests, configure the `test` command in your `package.json` to the test runner of your choice, and then use the command `encore test` from the CLI. The `encore test` command sets up all the necessary infrastructure in test mode before handing over to the test runner. [Learn more](https://encore.dev/docs/ts/develop/testing)
 
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```bash
+encore test
+```

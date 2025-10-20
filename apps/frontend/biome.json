@@ -1,0 +1,17 @@
+{
+  "extends": "//",
+  "files": {
+    "includes": ["!.next", "!dist", "!build", "!**/lib/client.ts"]
+  },
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noUnknownAtRules": "off"
+      }
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    }
+  }
+}

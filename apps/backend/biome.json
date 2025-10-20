@@ -1,0 +1,11 @@
+{
+  "extends": "//",
+  "files": {
+    "includes": ["!.encore", "!encore.gen"]
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  }
+}
